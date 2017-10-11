@@ -109,6 +109,7 @@ void insert(struct node** list)
     }
 
 }
+}
 
 
 void delete_task(struct node ** first)
