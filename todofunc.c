@@ -39,7 +39,7 @@ int date_equal(struct node *temp,struct node *curr)
   return 0;
 }
 void insert(struct node** list)
-{int x;
+{
   struct node *temp;
   temp=(struct node*)malloc(sizeof(struct node));
   temp->next=NULL;
@@ -100,8 +100,9 @@ void delete_task(struct node ** first)
   prev=NULL;
   current=*first;
   printf("\nEnter the name of the task you wish to delete: ");
-  scanf("%s",name);
-  while((current!=NULL)&&(strcmp(current->task,name)==0))
+  scanf("\n");
+  fgets(name,100,stdin);
+  while((current!=NULL)&&(strcmp(current->task,name)!=0))
   {
     prev=current;
     current=current->next;
@@ -118,6 +119,10 @@ void delete_task(struct node ** first)
 void task_completed(struct node**first)
 {
   struct node *n=*first;
+  char name[100];
+  printf("\nEnter name of task completed : ");
+  scanf("\n");
+  fgets(name,100,stdin);
   while(n!=NULL&&strcmp(n->task,name)!=0)
   {
     n=n->next;
