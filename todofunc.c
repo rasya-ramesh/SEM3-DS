@@ -9,7 +9,7 @@ void display(struct node* temp, int cutoff){
     while (temp!=NULL) {
         if(temp->priority<cutoff){
             printf("\nTask Number : %d\n",i);
-            printf("Task Name : %s\n",temp->task);
+            printf("Task Name : %s",temp->task);
             printf("Task Priority : %d\n",temp->priority);
             printf("Submission Date : %d/%d/%d\n",(temp->date).tm_wday,(temp->date).tm_mon,(temp->date).tm_year);
         }
@@ -39,18 +39,15 @@ int date_equal(struct node *temp,struct node *curr)
   return 0;
 }
 void insert(struct node** list)
-{
+{int x;
   struct node *temp;
   temp=(struct node*)malloc(sizeof(struct node));
   temp->next=NULL;
   printf("Enter the following details! \n");
   char name[100];
   printf("Name of your task : ");
-<<<<<<< HEAD
-  scanf("%s",name );
-=======
-  scanf("%[^\n]s",name);
->>>>>>> 18ad8a1daad170b2701823a0f099d7c85b67562a
+  scanf("\n");
+  fgets(name,100,stdin);
   int priority;
   printf("Priority in 1-5 : ");
   scanf("%d",&priority);
