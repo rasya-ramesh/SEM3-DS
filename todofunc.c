@@ -8,10 +8,10 @@ void display(struct node* temp, int cutoff){
     int i=1;
     while (temp!=NULL) {
         if(temp->priority<cutoff){
-            printf("Task Number : %d\n",i);
-            printf("Task Name : %s",temp->task);
+            printf("\nTask Number : %d\n",i);
+            printf("Task Name : %s\n",temp->task);
             printf("Task Priority : %d\n",temp->priority);
-            printf("Submission Date : %d/%d/%d",(temp->date).tm_wday,(temp->date).tm_mon,(temp->date).tm_year);
+            printf("Submission Date : %d/%d/%d\n",(temp->date).tm_wday,(temp->date).tm_mon,(temp->date).tm_year);
         }
         temp=temp->next;
         i+=1;
@@ -46,12 +46,16 @@ void insert(struct node** list)
   printf("Enter the following details! \n");
   char name[100];
   printf("Name of your task : ");
-  scanf("%s",name);
+<<<<<<< HEAD
+  scanf("%s",name );
+=======
+  scanf("%[^\n]s",name);
+>>>>>>> 18ad8a1daad170b2701823a0f099d7c85b67562a
   int priority;
-  printf("\nPriority in 1-5 : ");
+  printf("Priority in 1-5 : ");
   scanf("%d",&priority);
   struct tm date;
-  printf("\nDate in DD MM YYYY format : ");
+  printf("Date in DD MM YYYY format : ");
   scanf("%d%d%d",&date.tm_wday,&date.tm_mon,&date.tm_year );
   strcpy(temp->task,name);
   temp->priority=priority;
