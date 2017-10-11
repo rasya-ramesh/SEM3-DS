@@ -15,3 +15,4 @@ void task_completed(struct node**);
 void display(struct node*);
 void delete_task(struct node**);
 int compare_date(struct node*,struct node*);
+int date_equal(struct node *,struct node*);
