@@ -22,7 +22,7 @@ int main()
         case 3:display(first,2);
                 break;
         case 4:
-        // task_completed(&first);
+        task_completed(&first);
                 break;
         case 5:delete_task(&first);
                 break;
