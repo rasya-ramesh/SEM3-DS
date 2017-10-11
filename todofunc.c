@@ -113,3 +113,17 @@ void delete_task(struct node ** first)
     prev->next=current->next;
   free(current);
 }
+
+void task_completed(struct node**first)
+{
+  struct node *n=*first;
+  while(n!=NULL&&strcmp(n->task,name)!=0)
+  {
+    n=n->next;
+  }
+  if(n!=NULL)
+  {
+    if(strcmp(n->task,name)==0)
+      n->status=1;
+  }
+}
