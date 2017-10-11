@@ -17,3 +17,4 @@ void display(struct node*, int,int);
 void delete_task(struct node**);
 int compare_date(struct node*,struct node*);
 int date_equal(struct node *,struct node*);
+int validate_info(int ,struct tm);
