@@ -106,7 +106,7 @@ void insert(struct node** list)
     {
       prev->next=temp;
       temp->next=curr;
-    } 
+    }
 
 }
 
