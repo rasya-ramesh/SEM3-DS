@@ -74,10 +74,14 @@ void insert(struct node** list)
     prev=curr;
     curr=curr->next;
   }
-  while((curr!=NULL)&&date_equal(temp,curr)&&(curr->priority<=temp->priority))
+  if(date_equal(temp,prev))
   {
-    prev=curr;
-    curr=curr->next;
+      curr=prev;
+      while((curr!=NULL)&&date_equal(temp,curr)&&(curr->priority<=temp->priority))
+      {
+        prev=curr;
+        curr=curr->next;
+      }
   }
   if(curr==NULL)
   {
