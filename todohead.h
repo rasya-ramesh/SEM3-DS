@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
+#include<string.h>
 struct node{
     struct tm date;
     int priority;
@@ -12,7 +13,7 @@ struct node{
 
 void insert(struct node**);
 void task_completed(struct node**);
-void display(struct node*);
+void display(struct node*, int);
 void delete_task(struct node**);
 int compare_date(struct node*,struct node*);
 int date_equal(struct node *,struct node*);
