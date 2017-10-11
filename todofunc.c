@@ -99,7 +99,7 @@ void insert(struct node** list)
 
 void delete_task(struct node ** first)
 {
-  char name[20];
+  char a,name[20];
   struct node *current,*prev;
   prev=NULL;
   current=*first;
@@ -113,11 +113,21 @@ void delete_task(struct node ** first)
   }
   if(current==NULL)
     printf("This task does not exist\n");
-  else if(prev==NULL)
-    *first=current->next;
-  else
-    prev->next=current->next;
-  free(current);
+
+else{
+    printf("Task Name : %s",current->task);
+    printf("Task Priority : %d\n",current->priority);
+    printf("Submission Date : %d/%d/%d\n",(current->date).tm_wday,(current->date).tm_mon,(current->date).tm_year);
+    printf("\nDo you wish to delete above task (y/n) : ");
+    scanf("%c",&a);
+    if (a=='y'||a=='Y'){
+          if(prev==NULL)
+            *first=current->next;
+          else
+            prev->next=current->next;
+          free(current);
+      }
+  }
 }
 
 void task_completed(struct node**first)
