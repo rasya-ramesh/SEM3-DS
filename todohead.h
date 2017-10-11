@@ -6,6 +6,7 @@ struct node{
     int priority;
     char task[100];
     struct node *next;
+    int status; // 1 if completed, 0 if not
 };
 
 
