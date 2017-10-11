@@ -46,7 +46,7 @@ void insert(struct node** list)
   printf("Enter the following details! \n");
   char name[100];
   printf("Name of your task : ");
-  fgets(name,100,stdin);
+  scanf("%s",name);
   int priority;
   printf("\nPriority in 1-5 : ");
   scanf("%d",&priority);
