@@ -61,6 +61,11 @@ void insert(struct node** list)
   struct tm date;
   printf("Date in DD MM YYYY format : ");
   scanf("%d%d%d",&date.tm_wday,&date.tm_mon,&date.tm_year );
+  if(validate_info(priority,date)==0)
+  {
+    printf("INVALID INPUT\n");
+    return;
+  }
   strcpy(temp->task,name);
   temp->priority=priority;
   temp->date=date;
@@ -167,4 +172,16 @@ void task_completed(struct node**first)
   if (n->status!=1){
       printf("This task does not exist\n");
   }
+}
+int validate_info(int p,struct tm dt)
+{
+  if(!(p>=1 && p<=5))
+    return 0;
+  if(!(dt.tm_wday>0 && dt.tm_wday<=31))
+    return 0;
+  if(!(dt.tm_mon>0 && dt.tm_mon<=12))
+    return 0;
+  if(!((dt.tm_year%10000)==0))
+    return 0;
+  return 1;
 }
