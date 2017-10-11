@@ -22,11 +22,18 @@ int compare_date(struct node*temp,struct node*curr)
 {
   if((temp->date).tm_year>(curr->date).tm_year)
     return 1;
+  else if((temp->date).tm_year<(curr->date).tm_year)
+    return 0;
   if((temp->date).tm_mon>(curr->date).tm_mon)
     return 1;
+  else if((temp->date).tm_mon<(curr->date).tm_mon)
+    return 0;
   if((temp->date).tm_wday>(curr->date).tm_wday)
     return 1;
-  return 0;
+  else if((temp->date).tm_wday<(curr->date).tm_wday)
+    return 0;
+  if(temp,curr)
+    return 0;
 }
 int date_equal(struct node *temp,struct node *curr)
 {
@@ -83,16 +90,23 @@ void insert(struct node** list)
         curr=curr->next;
       }
   }
-  if(curr==NULL)
+    if(curr==NULL)
   {
     prev->next=temp;
     return;
   }
   else
   {
-    prev->next=temp;
-    temp->next=curr;
-  }
+    if(prev==NULL)
+    {
+      temp->next=curr;
+      *list=temp;
+    }
+    else
+    {
+      prev->next=temp;
+      temp->next=curr;
+    } 
 
 }
 
