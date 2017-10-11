@@ -67,3 +67,27 @@ void insert(struct node** list)
   }
   
 }
+
+
+void delete_task(&first)
+{
+  char name[20];
+  struct node *current,*prev;
+  prev=NULL;
+  current=*first;
+  printf("\nEnter the name of the task you wish to delete: ");
+  scanf("%s",name);
+  while((current!=NULL)&&(strcmp(current->task,name)==0))
+  {
+    prev=current;
+    current=current->next;
+  }
+  if(current==NULL)
+    printf("This task does not exist\n");
+  else if(prev==NULL)
+    *first=current->next;
+  else
+    prev->next=current->next;
+  free(current);
+}
+
