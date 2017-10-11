@@ -1,13 +1,13 @@
 #include "todohead.h"
 
-void display(struct node* temp, int cutoff){
+void display(struct node* temp, int cutoff, int stat){
     if(temp==NULL){
         printf("NO WORK TO DO! GO HAVE SOME FUN!!\n");
         return;
     }
     int i=1;
     while (temp!=NULL) {
-        if(temp->priority<cutoff){
+        if(temp->priority<cutoff && stat==temp->status){
             printf("\nTask Number : %d\n",i);
             printf("Task Name : %s",temp->task);
             printf("Task Priority : %d\n",temp->priority);
@@ -129,7 +129,13 @@ void task_completed(struct node**first)
   }
   if(n!=NULL)
   {
-    if(strcmp(n->task,name)==0)
+    if(strcmp(n->task,name)==0){
       n->status=1;
+     printf("Congrats on completing a task.\n");
+    }
+  }
+
+  if (n->status!=1){
+      printf("This task does not exist\n");
   }
 }

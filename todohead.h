@@ -13,7 +13,7 @@ struct node{
 
 void insert(struct node**);
 void task_completed(struct node**);
-void display(struct node*, int);
+void display(struct node*, int,int);
 void delete_task(struct node**);
 int compare_date(struct node*,struct node*);
 int date_equal(struct node *,struct node*);
