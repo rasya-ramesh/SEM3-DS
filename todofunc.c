@@ -1,6 +1,8 @@
 #include "todohead.h"
 
 int no_of_tasks=0;
+
+//function to save file
 void s(struct node * q){
     remove("dat.txt");
     if (q==NULL)
@@ -29,7 +31,7 @@ void s(struct node * q){
     }
 }
 
-
+//function to read file
 struct node * l(){
 
     FILE *f;
@@ -123,13 +125,17 @@ int compare_date(struct node*temp,struct node*curr){
         return 0;
 }
 int date_equal(struct node *temp,struct node *curr){
-    if((temp->date).tm_year==(curr->date).tm_year)
-        return 1;
-    if((temp->date).tm_mon==(curr->date).tm_mon)
-        return 1;
-    if((temp->date).tm_wday==(curr->date).tm_wday)
-        return 1;
-    return 0;
+    printf("%s\n","chill0" );
+    // if((temp->date).tm_year==(curr->date).tm_year)
+    //     return 1;
+    // printf("%s\n","chill1" );
+    // if((temp->date).tm_mon==(curr->date).tm_mon)
+    //     return 1;
+    // printf("%s\n","chill2" );
+    // if((temp->date).tm_wday==(curr->date).tm_wday)
+    //     return 1;
+    // printf("%s\n","chill3" );
+    return 1;
 }
 void insert(struct node** list){
     no_of_tasks+=1;
@@ -194,6 +200,7 @@ void insert(struct node** list){
 
 
     if(*list==NULL){
+
         *list=temp;
         return;
     }
@@ -205,7 +212,7 @@ void insert(struct node** list){
         prev=curr;
         curr=curr->next;
     }
-    if(date_equal(temp,prev)){
+    if(date_equal(temp,prev) && prev!=NULL){
         curr=prev;
         while((curr!=NULL)&&date_equal(temp,curr)&&(curr->priority<=temp->priority)){
             prev=curr;
