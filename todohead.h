@@ -30,3 +30,4 @@ int validate_info(int );
 int validate_date(struct tm);
 void s(struct node*);
 struct node * l();
+void prompt(struct node*first);
