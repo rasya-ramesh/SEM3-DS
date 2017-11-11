@@ -90,7 +90,7 @@ void display(struct node* temp, int cutoff, int stat){
             printf("\nTask Number : %d\n",i);
             printf("Task Name : %s",temp->task);
             printf("Task Priority : %d\n",temp->priority);
-            printf("Submission Date : %d/%d/%d\n",(temp->date).tm_mday,(temp->date).tm_mon,(temp->date).tm_year);
+            printf("Submission Date : %d/%d/%d\n",(temp->date).tm_wday,(temp->date).tm_mon,(temp->date).tm_year);
             if(temp->t==1){
                 printf("Subtasks:\n");
                 int j=1;
@@ -117,22 +117,13 @@ int compare_date(struct tm temp,struct tm curr){
         return 1;
     else if((temp).tm_mon<(curr).tm_mon)
         return 0;
-<<<<<<< HEAD
     if((temp).tm_wday>(curr).tm_wday)
         return 1;
     else if((temp).tm_wday<(curr).tm_wday)
-=======
-    if((temp->date).tm_mday>(curr->date).tm_mday)
-        return 1;
-    else if((temp->date).tm_mday<(curr->date).tm_mday)
-        return 0;
-    if(curr)
->>>>>>> 967dc0b8f12815a5f1d70d7848e24e7dfe7461d5
         return 0;
     printf("yolo");
     return 2;
 }
-<<<<<<< HEAD
 // int date_equal(struct node *temp,struct node *curr){
 //     if((temp->date).tm_year==(curr->date).tm_year)
 //       if((temp->date).tm_mon==(curr->date).tm_mon)
@@ -140,17 +131,6 @@ int compare_date(struct tm temp,struct tm curr){
 //           return 1;
 //     return 0;
 // }
-=======
-int date_equal(struct node *temp,struct node *curr){
-    if((temp->date).tm_year==(curr->date).tm_year)
-        return 1;
-    if((temp->date).tm_mon==(curr->date).tm_mon)
-        return 1;
-    if((temp->date).tm_mday==(curr->date).tm_mday)
-        return 1;
-    return 0;
-}
->>>>>>> 967dc0b8f12815a5f1d70d7848e24e7dfe7461d5
 void insert(struct node** list){
     no_of_tasks+=1;
     struct node *temp;
@@ -166,7 +146,7 @@ void insert(struct node** list){
     scanf("%d",&priority);
     struct tm date;
     printf("Date in DD MM YYYY format : ");
-    scanf("%d%d%d",&date.tm_mday,&date.tm_mon,&date.tm_year );
+    scanf("%d%d%d",&date.tm_wday,&date.tm_mon,&date.tm_year );
 
     if(validate_info(priority)==0){
         printf("INVALID PRIORITY\n");
@@ -278,7 +258,7 @@ void delete_task(struct node ** first){
     else{
         printf("Task Name : %s",current->task);
         printf("Task Priority : %d\n",current->priority);
-        printf("Submission Date : %d/%d/%d\n",(current->date).tm_mday,(current->date).tm_mon,(current->date).tm_year);
+        printf("Submission Date : %d/%d/%d\n",(current->date).tm_wday,(current->date).tm_mon,(current->date).tm_year);
         printf("\nDo you wish to delete above task (y/n) : ");
         scanf("%c",&a);
         if (a=='y'||a=='Y'){
@@ -313,7 +293,6 @@ void task_completed(struct node**first){
 int validate_info(int p){
     if(!(p>=1 && p<=5))
         return 0;
-<<<<<<< HEAD
     return 1;
 }
 int validate_date(struct tm dt)
@@ -343,57 +322,4 @@ int validate_date(struct tm dt)
   int flag=i;
   flag+=compare_date(tmax,dt);
   return flag;
-=======
-    if(!(dt.tm_mday>0 && dt.tm_mday<=31))
-        return 0;
-    if(!(dt.tm_mon>0 && dt.tm_mon<=12))
-        return 0;
-    // if(!((dt.tm_year%10000)==0))
-    //     return 0;
-    return 1;
-}
-
-void prompt(struct node*first)
-{
-    struct node *current=first;
-    int flag1=0,flag2=0;
-    time_t rawtime;
-    struct tm * timeinfo;
-    time ( &rawtime );
-    timeinfo = localtime ( &rawtime );
-    if(current!=NULL)
-        printf("Here are the tasks you have to do today:\n");
-    while(current!=NULL)
-    {
-        if(current->date.tm_mday==timeinfo->tm_mday&&current->date.tm_mon==(timeinfo->tm_mon)+1&&current->date.tm_year==(timeinfo->tm_year)+1900)
-        {
-            printf("\nTask Name : %s",current->task);
-            printf("Task Priority : %d\n",current->priority);
-            flag1=1;
-        }
-        current=current->next;
-    }
-    if(first!=NULL)
-        if(!flag1)
-            printf("None");
-    current=first;
-    if(current!=NULL)
-        printf("\nHere are the other tasks you have to do this month:\n");
-    while(current!=NULL)
-    {
-        if(current->date.tm_mon==(timeinfo->tm_mon)+1&&current->date.tm_year==(timeinfo->tm_year)+1900)
-        {
-            if(current->date.tm_mday!=timeinfo->tm_mday)
-            {
-                printf("\nTask Name : %s",current->task);
-                printf("Task Priority : %d\n",current->priority);
-                flag2=1;
-            }
-        }
-        current=current->next;
-    }
-    if(first!=NULL)
-        if(!flag2)
-            printf("None\n");
->>>>>>> 967dc0b8f12815a5f1d70d7848e24e7dfe7461d5
 }
