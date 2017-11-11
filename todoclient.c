@@ -7,6 +7,7 @@ int main()
     int ch,x;
     // first=NULL;//pointer to the first node of the list
     first=l();
+    prompt(first);
     while(1){
         printf("\n1.Insert Task\n");
         printf("2.View Tasks\n");
