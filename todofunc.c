@@ -118,7 +118,6 @@ int compare_date(struct tm temp,struct tm curr){
     if((temp).tm_wday>(curr).tm_wday)
         return 1;
     else if((temp).tm_wday<(curr).tm_wday)
-
         return 0;
     return 2;
 }
