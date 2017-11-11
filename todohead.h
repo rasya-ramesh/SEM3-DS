@@ -29,3 +29,4 @@ int date_equal(struct node *,struct node*);
 int validate_info(int ,struct tm);
 void s(struct node*);
 struct node * l();
+void prompt(struct node*first);
