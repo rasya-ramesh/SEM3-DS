@@ -121,17 +121,16 @@ int compare_date(struct tm temp,struct tm curr){
         return 1;
     else if((temp).tm_wday<(curr).tm_wday)
         return 0;
-    //if(temp,curr)
-      //  return 0;
+    printf("yolo");
+    return 2;
 }
-int date_equal(struct node *temp,struct node *curr){
-    //printf("%s\n","chill0" );
-    if((temp->date).tm_year==(curr->date).tm_year)
-      if((temp->date).tm_mon==(curr->date).tm_mon)
-        if((temp->date).tm_wday==(curr->date).tm_wday)
-          return 1;
-    return 0;
-}
+// int date_equal(struct node *temp,struct node *curr){
+//     if((temp->date).tm_year==(curr->date).tm_year)
+//       if((temp->date).tm_mon==(curr->date).tm_mon)
+//         if((temp->date).tm_wday==(curr->date).tm_wday)
+//           return 1;
+//     return 0;
+// }
 void insert(struct node** list){
     no_of_tasks+=1;
     struct node *temp;
@@ -217,9 +216,9 @@ void insert(struct node** list){
         prev=curr;
         curr=curr->next;
     }
-    if(date_equal(temp,prev) && prev!=NULL){
+    if(compare_date(temp->date,prev->date)==2 && prev!=NULL){
         curr=prev;
-        while((curr!=NULL)&&date_equal(temp,curr)&&(curr->priority<=temp->priority)){
+        while((curr!=NULL)&&compare_date(temp->date,curr->date)==2&&(curr->priority<=temp->priority)){
             prev=curr;
             curr=curr->next;
         }
