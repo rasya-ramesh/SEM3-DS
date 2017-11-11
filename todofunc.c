@@ -1,5 +1,82 @@
 #include "todohead.h"
 
+int no_of_tasks=0;
+void s(struct node * q){
+    remove("dat.txt");
+    if (q==NULL)
+        return;
+    struct node *temp=q;
+    FILE *f;
+    f=fopen("dat.txt","wb");
+    struct sub * temp_sub;
+
+    int i=0,j=0;
+    fwrite(&no_of_tasks,sizeof(int),1,f);
+    while(i<no_of_tasks){
+        j=0;
+        if(q->cnt!=0)
+            temp_sub=temp->s;
+        printf("temp%d:%d\n",i,temp->cnt);
+        fwrite(temp,sizeof(struct node),1,f);
+        while(j<temp->cnt){
+            printf("temp_sub:%s\n",temp_sub->subt);
+            fwrite(temp_sub,sizeof(struct sub),1,f);
+            temp_sub=temp_sub->next;
+            j+=1;
+        }
+        i+=1;
+        temp=temp->next;
+    }
+}
+
+
+struct node * l(){
+
+    FILE *f;
+    f=fopen("dat.txt","rb");
+    if (f==NULL)
+        return NULL;
+    struct node *head,*prev,*curr;
+    // head=NULL;
+    int i=0;
+    int count;
+    fread(&count,sizeof(int),1,f);
+    no_of_tasks=count;
+    while(i<count){
+        curr=(struct node *)malloc(sizeof(struct node));
+        fread(curr,sizeof(struct node),1,f);
+        curr->next=NULL;
+        if (i==0){
+            head=curr;
+            // printf("%s",head->task);
+            prev=curr;
+        }
+        else{
+            prev->next=curr;
+            prev=prev->next;
+        }
+        int cnt=curr->cnt;
+        int j=0;
+        struct sub *prev_s,*curr_s;
+        while(j<curr->cnt){
+            curr_s=(struct sub *)malloc(sizeof(struct sub));
+            curr_s->next=NULL;
+            fread(curr_s,sizeof(struct sub),1,f);
+            if(j==0){
+                prev_s=curr_s;
+                curr->s=prev_s;
+            }
+            else{
+                prev_s->next=curr_s;
+                prev_s=prev_s->next;
+            }
+        j+=1;
+        }
+        i+=1;
+    }
+
+    return head;
+}
 void display(struct node* temp, int cutoff, int stat){
     if(temp==NULL){
         printf("NO WORK TO DO! GO HAVE SOME FUN!!\n");
@@ -12,6 +89,17 @@ void display(struct node* temp, int cutoff, int stat){
             printf("Task Name : %s",temp->task);
             printf("Task Priority : %d\n",temp->priority);
             printf("Submission Date : %d/%d/%d\n",(temp->date).tm_wday,(temp->date).tm_mon,(temp->date).tm_year);
+            if(temp->t==1){
+                printf("Subtasks:\n");
+                int j=1;
+                struct sub *prev_s;
+                prev_s=temp->s;
+                while(prev_s!=NULL){
+                    printf("%d. %s",j,prev_s->subt);
+                    prev_s=prev_s->next;
+                    j+=1;
+                }
+            }
         }
         temp=temp->next;
         i+=1;
@@ -31,7 +119,7 @@ int compare_date(struct node*temp,struct node*curr){
         return 1;
     else if((temp->date).tm_wday<(curr->date).tm_wday)
         return 0;
-    if(temp,curr)
+    if(curr)
         return 0;
 }
 int date_equal(struct node *temp,struct node *curr){
@@ -44,11 +132,12 @@ int date_equal(struct node *temp,struct node *curr){
     return 0;
 }
 void insert(struct node** list){
+    no_of_tasks+=1;
     struct node *temp;
     temp=(struct node*)malloc(sizeof(struct node));
     temp->next=NULL;
     printf("Enter the following details! \n");
-    char name[100];
+    char name[100],temp_sub;
     printf("Name of your task : ");
     scanf("\n");
     fgets(name,100,stdin);
@@ -58,6 +147,7 @@ void insert(struct node** list){
     struct tm date;
     printf("Date in DD MM YYYY format : ");
     scanf("%d%d%d",&date.tm_wday,&date.tm_mon,&date.tm_year );
+
     if(validate_info(priority,date)==0){
         printf("INVALID INPUT\n");
         return;
@@ -66,6 +156,41 @@ void insert(struct node** list){
     temp->priority=priority;
     temp->date=date;
     temp->status=0;
+    temp->cnt=0;
+    printf("Does this task have subtasks?(y/n)" );
+    scanf("\n");
+    scanf("%c",&temp_sub);
+    if (temp_sub=='y'){
+        temp->cnt+=1;
+        temp->t=1;
+        struct sub *prev_s;
+        prev_s=(struct sub*)malloc(sizeof(struct sub));
+        printf("Enter subtask : ");
+        scanf("\n");
+        fgets(prev_s->subt,100,stdin);
+        prev_s->next=NULL;
+        temp->s=prev_s;
+        printf("More subtasks?(y/n)\n");
+        scanf("%c",&temp_sub);
+        while(temp_sub=='y'){
+            temp->cnt+=1;
+            printf("Enter subtask : ");
+            struct sub *curr_s;
+            curr_s=(struct sub*)malloc(sizeof(struct sub));
+            char subt0[100];
+            scanf("\n");
+            fgets(subt0,100,stdin);
+            strcpy(curr_s->subt,subt0);
+            curr_s->next=NULL;
+            prev_s->next=curr_s;
+            prev_s=prev_s->next;
+            printf("More subtasks?(y/n)\n");
+            scanf("%c",&temp_sub);
+        }
+    }
+    else{
+        temp->t=0;
+    }
 
 
     if(*list==NULL){
@@ -100,7 +225,6 @@ void insert(struct node** list){
             prev->next=temp;
             temp->next=curr;
         }
-
     }
 }
 
@@ -163,7 +287,7 @@ int validate_info(int p,struct tm dt){
         return 0;
     if(!(dt.tm_mon>0 && dt.tm_mon<=12))
         return 0;
-    if(!((dt.tm_year%10000)==0))
-        return 0;
+    // if(!((dt.tm_year%10000)==0))
+    //     return 0;
     return 1;
 }
