@@ -142,25 +142,22 @@ void insert(struct node** list){
     int priority;
     printf("Priority in 1-5 : ");
     scanf("%d",&priority);
-    struct tm date;
-    printf("Date in DD MM YYYY format : ");
-    scanf("%d%d%d",&date.tm_mday,&date.tm_mon,&date.tm_year );
-
     if(validate_info(priority)==0){
         printf("INVALID PRIORITY\n");
         return;
-      }
-    switch (validate_date(date)) {
-
-      case -1:
-        printf("OOpss Date passed already\n" );
-        break;
-      case 1:
-        printf("Date is Not within a month\n");
-        break;
-      case 2:
-      printf("Good Going,Valiod Date\n");
-      break;
+     }
+    struct tm date;
+    printf("Date in DD MM YYYY format : ");
+    scanf("%d%d%d",&date.tm_mday,&date.tm_mon,&date.tm_year );
+    //See whether you have to deallocate the memory before returning
+    if(validate_date(date)==0){
+        printf("INVALID INPUT\n");
+        return;
+    }
+    if(validate_date(date)==2)
+    {
+        printf("That task is far into the future, chill.\n");
+        return;
     }
     strcpy(temp->task,name);
     temp->priority=priority;
@@ -293,34 +290,98 @@ int validate_info(int p){
         return 0;
     return 1;
 }
-int validate_date(struct tm dt)
-{
-  time_t my_time;
-  struct tm *tlocal;
-  time(&my_time);
-  tlocal=localtime(&my_time);
-  struct tm tl;
-  tl.tm_wday=tlocal->tm_wday;
-  tl.tm_mon=tlocal->tm_mon;
-  tl.tm_year=(tlocal->tm_year)+1900;
-  int i=compare_date(dt,tl);
-    struct tm tmax;
-  if(i==1)
-  {
 
-    if((tl.tm_mon + 3)>12)
+int validate_date(struct tm dt){
+    time_t rawtime;
+    struct tm * timeinfo;
+    time ( &rawtime );
+    timeinfo = localtime ( &rawtime );
+    if((timeinfo->tm_year)+1900>dt.tm_year)
+        return 0;
+    if(dt.tm_year>(timeinfo->tm_year)+1902)
+        return 2;
+    if((timeinfo->tm_mon)+1>dt.tm_mon||dt.tm_mon>12)
+        return 0;
+    if(timeinfo->tm_mday>dt.tm_mday)
+        return 0;
+    switch(dt.tm_mon)
     {
-      tmax.tm_mon=((tl.tm_mon)%12)+3;
-      tmax.tm_year=tl.tm_year+1;
+        case 1:
+        case 3:
+        case 5:
+        case 7:
+        case 8:
+        case 10:
+        case 12:
+                if(dt.tm_mday>31)
+                    return 0;
+                break;
+        case 4:
+        case 6:
+        case 9:
+        case 11:
+                if(dt.tm_mday>30)
+                    return 0;
+                break;
+        case 2:
+                if((1900+dt.tm_year)%4 == 0)
+                {
+                    if((1900+dt.tm_year) %100 == 0)
+                    {
+                        if ((1900+dt.tm_year)%400 == 0)
+                        {
+                            if(dt.tm_mday>29)
+                                return 0;
+                        }
+                        else
+                        {
+                            if(dt.tm_mday>28)
+                                return 0;
+                        }
+                    }
+                    else
+                    {
+                        if(dt.tm_mday>29)
+                            return 0;
+                    }
+                }
+                else
+                {
+                    if(dt.tm_mday>28)
+                        return 0;
+                }
+                break;
     }
-
-  }
-  else
-    return -1;
-  int flag=i;
-  flag+=compare_date(tmax,dt);
-  return flag;
+    return 1;
 }
+// int validate_date(struct tm dt)
+// {
+//   time_t my_time;
+//   struct tm *tlocal;
+//   time(&my_time);
+//   tlocal=localtime(&my_time);
+//   struct tm tl;
+//   tl.tm_wday=tlocal->tm_wday;
+//   tl.tm_mon=tlocal->tm_mon;
+//   tl.tm_year=(tlocal->tm_year)+1900;
+//   int i=compare_date(dt,tl);
+//     struct tm tmax;
+//   if(i==1)
+//   {
+//
+//     if((tl.tm_mon + 3)>12)
+//     {
+//       tmax.tm_mon=((tl.tm_mon)%12)+3;
+//       tmax.tm_year=tl.tm_year+1;
+//     }
+//
+//   }
+//   else
+//     return -1;
+//   int flag=i;
+//   flag+=compare_date(tmax,dt);
+//   return flag;
+// }
 
 void prompt(struct node*first)
 {
@@ -332,13 +393,25 @@ void prompt(struct node*first)
     timeinfo = localtime ( &rawtime );
     if(current!=NULL)
         printf("Here are the tasks you have to do today:\n");
+    int i=1;
     while(current!=NULL)
     {
         if(current->date.tm_mday==timeinfo->tm_mday&&current->date.tm_mon==(timeinfo->tm_mon)+1&&current->date.tm_year==(timeinfo->tm_year)+1900)
         {
-            printf("\nTask Name : %s",current->task);
+            printf("\n%d. Task Name : %s",i,current->task);
             printf("Task Priority : %d\n",current->priority);
+            struct sub *subtask=current->s;
+            if(subtask!=NULL)
+                printf("Here are the subtasks for this task: ");
+            int j=1;
+            while(subtask!=NULL)
+            {
+                printf("\n\t%d. Subtask Name: %s",j,subtask->subt);
+                j++;
+                subtask=subtask->next;
+            }
             flag1=1;
+            i++;
         }
         current=current->next;
     }
@@ -346,6 +419,7 @@ void prompt(struct node*first)
         if(!flag1)
             printf("None");
     current=first;
+    i=1;
     if(current!=NULL)
         printf("\nHere are the other tasks you have to do this month:\n");
     while(current!=NULL)
@@ -354,9 +428,20 @@ void prompt(struct node*first)
         {
             if(current->date.tm_mday!=timeinfo->tm_mday)
             {
-                printf("\nTask Name : %s",current->task);
+                printf("\n%d. Task Name : %s",i,current->task);
                 printf("Task Priority : %d\n",current->priority);
+                struct sub *subtask=current->s;
+                if(subtask!=NULL)
+                    printf("Here are the subtasks for this task: ");
+                int j=1;
+                while(subtask!=NULL)
+                {
+                    printf("\n\t%d. Subtask Name: %s",j,subtask->subt);
+                    j++;
+                    subtask=subtask->next;
+                }
                 flag2=1;
+                i++;
             }
         }
         current=current->next;
