@@ -139,25 +139,30 @@ void insert(struct node** list){
     printf("Name of your task : ");
     scanf("\n");
     fgets(name,100,stdin);
-    int priority;
     printf("Priority in 1-5 : ");
+    int priority;
+    reset_priority:
     scanf("%d",&priority);
     if(validate_info(priority)==0){
         printf("INVALID PRIORITY\n");
-        return;
+        printf("Enter the priority again: ");
+        goto reset_priority;
      }
-    struct tm date;
     printf("Date in DD MM YYYY format : ");
+    struct tm date;
+    reset_date:
     scanf("%d%d%d",&date.tm_mday,&date.tm_mon,&date.tm_year );
     //See whether you have to deallocate the memory before returning
     if(validate_date(date)==0){
         printf("INVALID INPUT\n");
-        return;
+        printf("Enter valid date in DD MM YYYY format: ");
+        goto reset_date;
     }
     if(validate_date(date)==2)
     {
         printf("That task is far into the future, chill.\n");
-        return;
+        printf("Enter valid date in DD MM YYYY format: ");
+        goto reset_date;
     }
     strcpy(temp->task,name);
     temp->priority=priority;
