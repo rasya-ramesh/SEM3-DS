@@ -464,6 +464,7 @@ void prompt(struct node*first)
         if(!flag2)
             printf("None\n");
 }
+/*
 void extension(struct node *first)
 {
  time_t my_time;
@@ -513,7 +514,6 @@ void extension(struct node *first)
           }
           else
               prev->next=curr->next;
-
           first=insert_new(first,p);
           curr=first;
           free(p);
@@ -568,13 +568,11 @@ struct node* insert_new(struct node *first,struct node *e)
         prev_s->next=curr_s;
         prev_s=prev_s->next;
         e_s=e_s->next;
-
       }
   }
   else
     temp->t=0;
   if(first==NULL){
-
         first=temp;
         return first;
     }
@@ -608,4 +606,63 @@ struct node* insert_new(struct node *first,struct node *e)
         }
     }
   return first;
+}*/
+void del_subtask(struct node *p)
+{
+
+  if(p->t==1)
+  {
+    printf("1.Delete All Subtasks\n2.Delete a particular Subtask\n");
+    struct sub *curr_s;
+    curr_s=p->s;
+    struct sub *prev_s;
+    prev_s=NULL;
+    int ch,nos=0;
+    scanf("%d",&ch);
+    char subtname[100];
+    switch (ch) {
+      case 1:
+        while(curr_s!=NULL)
+        {
+          prev_s=curr_s;
+          curr_s=curr_s->next;
+          free(prev_s);
+          prev_s=NULL;
+        }
+        p->t=0;
+        p->s=NULL;
+        p->cnt=0;
+        break;
+      case 2:
+        printf("Enter subtask : ");
+        scanf("\n");
+        fgets(subtname,100,stdin);
+        struct sub *curr_s=p->s;
+        struct sub *prev_s=NULL;
+        while((curr_s!=NULL)&&(strcmp(curr_s->subt,subtname)!=0))
+        {
+          prev_s=curr_s;
+          curr_s=curr_s->next;
+          //nos+=1;
+        }
+        if(curr_s==NULL)
+          printf("NOT FOUND!\n" );
+        else
+        {
+          if(prev_s== NULL)
+            p->s=curr_s->next;
+          else
+            prev_s->next=curr_s->next;
+          p->cnt--;
+          free(curr_s);
+          if(p->cnt==0)
+          {
+            p->t=0;
+            p->s=NULL;
+          }
+        }
+    }
+  }
+  else
+  printf("No subtasks\n");
 }
