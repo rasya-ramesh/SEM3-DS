@@ -269,6 +269,7 @@ void delete_task(struct node ** first){
             else
                 prev->next=current->next;
             free(current);
+            no_of_tasks-=1;
             break;
           case 2:
             printf("subtask delete\n" );
