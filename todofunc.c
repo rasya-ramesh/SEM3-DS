@@ -3,7 +3,8 @@
 int no_of_tasks=0;
 
 //function to save file
-void s(struct node * q){
+void s(struct node * q)
+{
     remove("dat.txt");
     if (q==NULL)
         return;
@@ -14,12 +15,12 @@ void s(struct node * q){
 
     int i=0,j=0;
     fwrite(&no_of_tasks,sizeof(int),1,f);
-    while(i<no_of_tasks){
+    while(temp!=NULL){
         j=0;
         if(q->cnt!=0)
             temp_sub=temp->s;
         fwrite(temp,sizeof(struct node),1,f);
-        while(j<temp->cnt){
+        while(temp_sub!=NULL){
             fwrite(temp_sub,sizeof(struct sub),1,f);
             temp_sub=temp_sub->next;
             j+=1;
@@ -254,13 +255,13 @@ void delete_task(struct node ** first){
         current=current->next;
     }
     if(current==NULL)
-    printf("This task does not exist\n");
+        printf("This task does not exist\n");
 
     else{
         printf("Task Name : %s",current->task);
         printf("Task Priority : %d\n",current->priority);
         printf("Submission Date : %d/%d/%d\n",(current->date).tm_mday,(current->date).tm_mon,(current->date).tm_year);
-        printf("\nDo you wish to delete above \n1.task\n2.Subtasks: ");
+        printf("\nDo you wish to delete above \n1. Task\n2. Subtasks: ");
         scanf("%d",&ch);
         switch (ch) {
           case 1:
@@ -269,6 +270,7 @@ void delete_task(struct node ** first){
             else
                 prev->next=current->next;
             free(current);
+
             no_of_tasks-=1;
             break;
           case 2:
@@ -278,6 +280,7 @@ void delete_task(struct node ** first){
         }
     }
 }
+
 
 void task_completed(struct node**first){
     struct node *n=*first;
@@ -367,34 +370,6 @@ int validate_date(struct tm dt){
     }
     return 1;
 }
-// int validate_date(struct tm dt)
-// {
-//   time_t my_time;
-//   struct tm *tlocal;
-//   time(&my_time);
-//   tlocal=localtime(&my_time);
-//   struct tm tl;
-//   tl.tm_wday=tlocal->tm_wday;
-//   tl.tm_mon=tlocal->tm_mon;
-//   tl.tm_year=(tlocal->tm_year)+1900;
-//   int i=compare_date(dt,tl);
-//     struct tm tmax;
-//   if(i==1)
-//   {
-//
-//     if((tl.tm_mon + 3)>12)
-//     {
-//       tmax.tm_mon=((tl.tm_mon)%12)+3;
-//       tmax.tm_year=tl.tm_year+1;
-//     }
-//
-//   }
-//   else
-//     return -1;
-//   int flag=i;
-//   flag+=compare_date(tmax,dt);
-//   return flag;
-// }
 
 void prompt(struct node*first)
 {
@@ -463,10 +438,15 @@ void prompt(struct node*first)
         if(!flag2)
             printf("None\n");
 }
+
+
+
+=======
 /*
-void extension(struct node *first)
+void extension(struct node **first)
+
 {
- time_t my_time;
+  time_t my_time;
   struct tm *tlocal;
   time(&my_time);
   tlocal=localtime(&my_time);
@@ -476,7 +456,7 @@ void extension(struct node *first)
   tl.tm_year=(tlocal->tm_year)+1900;
   //now tl has the present sytem date.
   struct node*curr;
-  curr=first;
+  curr=*first;
   struct node*prev=NULL;
   reset_loop:
   while(curr!=NULL)
@@ -484,46 +464,46 @@ void extension(struct node *first)
     //printf("System Date : %d/%d/%d\n",tl.tm_mday,tl.tm_mon,tl.tm_year);
     int v=compare_date(tl,curr->date);
     if(v==1)//local date is greater than task submission date
-      {
+    {
         printf("Deadline is Over for the task");
         printf("Task Name : %s",curr->task);
         printf("Task Priority : %d\n",curr->priority);
         printf("Submission Date : %d/%d/%d\n",(curr->date).tm_mday,(curr->date).tm_mon,(curr->date).tm_year);
-        if(curr->t==1){
+        if(curr->s!=NULL)
+        {
             printf("Subtasks:\n");
             int j=1;
             struct sub *prev_s;
             prev_s=curr->s;
-            while(prev_s!=NULL){
+            while(prev_s!=NULL)
+            {
                 printf("%d. %s",j,prev_s->subt);
                 prev_s=prev_s->next;
                 j+=1;
-              }
             }
-        printf("Make a choice\n1.Enter new Submission Date\n2.Delete the task\n");
+        }
+        printf("Make a choice\n1. Enter new Submission Date\n2. Delete the task\n");
         int choice;
         struct node *p;
-          p=curr;
+        p=curr;
         scanf("%d",&choice );
-        switch (choice) {
-          case 1:
-          if(prev==NULL)
-          {
-              first=curr->next;
-          }
-          else
-              prev->next=curr->next;
-
-          first=insert_new(first,p);
-          curr=first;
-          free(p);
-          goto reset_loop;
-          break;
+        switch (choice)
+        {
+            case 1:
+            if(prev==NULL)
+                *first=curr->next;
+            else
+                prev->next=curr->next;
+            *first=insert_new(*first,p);
+            curr=*first;
+            free(p);
+            goto reset_loop;
+            break;
         }
-      }
-      prev=curr;
-      curr=curr->next;
-    }
+    }//END OF IF
+     prev=curr;
+     curr=curr->next;
+ }//END OF WHILE
 }
 struct node* insert_new(struct node *first,struct node *e)
 {
@@ -551,33 +531,12 @@ struct node* insert_new(struct node *first,struct node *e)
   temp->date=e->date;
   temp->status=0;
   temp->cnt=e->cnt;
-  if(e->t==1){
-      temp->t=1;
-      struct sub *prev_s;
-      prev_s=(struct sub*)malloc(sizeof(struct sub));
-      struct sub *e_s=e->s;
-      strcpy(prev_s->subt,e_s->subt);
-      prev_s->next=NULL;
-      temp->s=prev_s;
-      e_s=e_s->next;
-      while(e_s!=NULL){
-        struct sub *curr_s;
-        curr_s=(struct sub*)malloc(sizeof(struct sub));
-        strcpy(curr_s->subt,e_s->subt);
-        curr_s->next=NULL;
-        prev_s->next=curr_s;
-        prev_s=prev_s->next;
-        e_s=e_s->next;
-
-      }
-  }
-  else
-    temp->t=0;
+  temp->s=e->s;
+  temp->t=e->t;
   if(first==NULL){
-
         first=temp;
         return first;
-    }
+  }
   struct node *curr;
   struct node *prev;
   prev=NULL;
@@ -656,6 +615,65 @@ void del_subtask(struct node *p)
           else
             prev_s->next=curr_s->next;
           p->cnt--;
+          free(curr_s);
+          if(p->cnt==0)
+          {
+            p->t=0;
+            p->s=NULL;
+          }
+        }
+    }
+  }
+  else
+  printf("No subtasks\n");
+}
+void del_subtask(struct node *p)
+{
+
+  if(p->t==1)
+  {
+    printf("1.Delete All Subtasks\n2.Delete a particular Subtask\n");
+    struct sub *curr_s;
+    curr_s=p->s;
+    struct sub *prev_s;
+    prev_s=NULL;
+    int ch,nos=0;
+    scanf("%d",&ch);
+    char subtname[100];
+    switch (ch) {
+      case 1:
+        while(curr_s!=NULL)
+        {
+          prev_s=curr_s;
+          curr_s=curr_s->next;
+          free(prev_s);
+          prev_s=NULL;
+        }
+        p->t=0;
+        p->s=NULL;
+        p->cnt=0;
+        break;
+      case 2:
+        printf("Enter subtask : ");
+        scanf("\n");
+        fgets(subtname,100,stdin);
+        struct sub *curr_s=p->s;
+        struct sub *prev_s=NULL;
+        while((curr_s!=NULL)&&(strcmp(curr_s->subt,subtname)!=0))
+        {
+          prev_s=curr_s;
+          curr_s=curr_s->next;
+          //nos+=1;
+        }
+        if(curr_s==NULL)
+          printf("NOT FOUND!\n" );
+        else
+        {
+          if(prev_s== NULL)
+            p->s=curr_s->next;
+          else
+            prev_s->next=curr_s->next;
+          (p->cnt)--;
           free(curr_s);
           if(p->cnt==0)
           {

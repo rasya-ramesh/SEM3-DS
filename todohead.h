@@ -19,7 +19,7 @@ struct node{
     int cnt;
 };
 
-
+void del_subtask(struct node *p);
 void insert(struct node**);
 void task_completed(struct node**);
 void display(struct node*, int,int);
@@ -31,6 +31,5 @@ int validate_date(struct tm);
 void s(struct node*);
 struct node * l();
 void prompt(struct node*first);
-void extension(struct node*first);
+void extension(struct node**first);
 struct node* insert_new(struct node *first,struct node *e);
-void del_subtask(struct node *p);
