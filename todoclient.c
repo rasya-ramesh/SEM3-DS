@@ -2,9 +2,11 @@
 
 int main()
 {
+    system("clear");
     printf("-------------------------------------------------------------------");
     printf("\n\t\t\tTO-DO LIST ");
     printf("\n-------------------------------------------------------------------\n");
+
     struct node *first;
     int ch,x;
     // first=NULL;//pointer to the first node of the list

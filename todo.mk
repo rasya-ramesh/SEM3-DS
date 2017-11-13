@@ -10,4 +10,4 @@ todoclient.o: todoclient.c todohead.h
 			gcc -c todoclient.c
 
 clean:
-	rm -f *o todo
+	rm -f *.o
