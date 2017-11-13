@@ -2,7 +2,7 @@
 
 int main()
 {
-
+    system("clear");
     struct node *first;
     int ch,x;
     // first=NULL;//pointer to the first node of the list
