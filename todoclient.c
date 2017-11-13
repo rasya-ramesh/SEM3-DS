@@ -2,14 +2,20 @@
 
 int main()
 {
-
+    printf("-------------------------------------------------------------------");
+    printf("\n\t\t\tTO-DO LIST ");
+    printf("\n-------------------------------------------------------------------\n");
     struct node *first;
     int ch,x;
     // first=NULL;//pointer to the first node of the list
     first=l();
     prompt(first);
-  //  extension(first);
+    extension(&first);
     while(1){
+        printf("\n\n-------------------------------------------------------------------");
+        printf("\n\t\t\t    MENU ");
+        printf("\n-------------------------------------------------------------------\n");
+
         printf("\n1.Insert Task\n");
         printf("2.View Tasks\n");
         printf("3.View Highest Priority Tasks\n");
