@@ -565,7 +565,7 @@ void extension(struct node **first){
             printf("Make an appropriate choice.\n" );
             ch=getdig();
         }
-        switch (choice)
+        switch (ch)
         {
             case 1:
             printf("\nSubmission Date in DD MM YYYY format : ");
