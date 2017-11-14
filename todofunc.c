@@ -290,6 +290,7 @@ void edit_task(struct node** first,struct node * prev,struct node * current){
         prev->next=current->next;
 
     struct node *temp=current;
+    temp->next=NULL;
     current=*first;
     prev=NULL;
     while((current!=NULL)&&(compare_date(temp->date,current->date))){
