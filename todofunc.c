@@ -398,7 +398,7 @@ int validate_date(struct tm dt){
     if(dt.tm_mon>12||dt.tm_mon<1)
         return 0;
     //if entered date is less than actual date given that year and month are the same
-    if(dt.tm_mday<timeinfo->tm_mday&&(timeinfo->tm_mon==dt.tm_mon)&&(timeinfo->tm_year==dt.tm_year))
+    if(dt.tm_mday<timeinfo->tm_mday&&(timeinfo->tm_mon+1==dt.tm_mon)&&(timeinfo->tm_year+1900==dt.tm_year))
         return 0;
     if(dt.tm_mday<1)
         return 0;
@@ -492,14 +492,10 @@ void prompt(struct node*first){
         if(!flag2)
             printf("None\n");
 }
-
-
-
-void extension(struct node **first){}
-/*
-void extension(struct node **first)
-
-{
+//void extension(struct node **first){}
+void extension(struct node **first){
+  if(*first==NULL)
+    return;
   time_t my_time;
   struct tm *tlocal;
   time(&my_time);
@@ -509,118 +505,113 @@ void extension(struct node **first)
   tl.tm_mon=tlocal->tm_mon+1;
   tl.tm_year=(tlocal->tm_year)+1900;
   //now tl has the present sytem date.
-  struct node*curr;
-  curr=*first;
-  struct node*prev=NULL;
-  reset_loop:
-  while(curr!=NULL)
+  struct node*current;
+  current=*first;//current points at first
+  struct node*previous=NULL;
+  struct node*prev=NULL,*curr=NULL;
+  while(current->next!=NULL)
   {
-    //printf("System Date : %d/%d/%d\n",tl.tm_mday,tl.tm_mon,tl.tm_year);
-    int v=compare_date(tl,curr->date);
+    int v=compare_date(tl,current->date);
     if(v==1)//local date is greater than task submission date
     {
+        printf("System Date : %d/%d/%d\n",tl.tm_mday,tl.tm_mon,tl.tm_year);
         printf("Deadline is Over for the task");
-        printf("Task Name : %s",curr->task);
-        printf("Task Priority : %d\n",curr->priority);
-        printf("Submission Date : %d/%d/%d\n",(curr->date).tm_mday,(curr->date).tm_mon,(curr->date).tm_year);
-        if(curr->s!=NULL)
+        printf("Task Name : %s",current->task);
+        printf("Task Priority : %d\n",current->priority);
+        printf("Submission Date : %d/%d/%d\n",(current->date).tm_mday,(current->date).tm_mon,(current->date).tm_year);
+        int j=0;
+        if(current->s!=NULL)
         {
             printf("Subtasks:\n");
-            int j=1;
             struct sub *prev_s;
-            prev_s=curr->s;
+            prev_s=current->s;
             while(prev_s!=NULL)
             {
+                j+=1;
                 printf("%d. %s",j,prev_s->subt);
                 prev_s=prev_s->next;
-                j+=1;
             }
         }
         printf("Make a choice\n1. Enter new Submission Date\n2. Delete the task\n");
-        int choice;
-        struct node *p;
-        p=curr;
+        int choice=0;
         scanf("%d",&choice );
         switch (choice)
         {
             case 1:
-            if(prev==NULL)
-                *first=curr->next;
+            printf("\nSubmission Date in DD MM YYYY format : ");
+            struct tm date;
+            reset_date:
+            scanf("%d%d%d",&date.tm_mday,&date.tm_mon,&date.tm_year );
+            //See whether you have to deallocate the memory before returning
+            if(validate_date(date)==0){
+                printf("INVALID INPUT\n");
+                printf("Enter valid date in DD MM YYYY format: ");
+                goto reset_date;
+            }
+            if(validate_date(date)==2){
+                printf("That task is far into the future, chill.\n");
+                printf("Enter valid date in DD MM YYYY format: ");
+                goto reset_date;
+            }
+            current->date=date;
+            if(previous==NULL)
+            {
+                *first=current->next;
+            }
             else
-                prev->next=curr->next;
-            *first=insert_new(*first,p);
-            curr=*first;
-            free(p);
-            goto reset_loop;
+                previous->next=current->next;
+            //node is delinked
+            struct node *temp=current;//temp points to delinked node
+            temp->next=NULL;//temp is not linked
+            curr=*first;//iterator initialised
+            prev=NULL;//prev of iterator initialised
+            while((curr!=NULL)&&(compare_date(temp->date,curr->date))){
+                prev=curr;
+                curr=curr->next;
+            }
+            if(prev!=NULL && compare_date(temp->date,prev->date)==2){
+                curr=prev;
+                while((curr!=NULL)&&compare_date(temp->date,curr->date)==2&&(curr->priority<=temp->priority)){
+                    prev=curr;
+                    curr=curr->next;
+                }
+            }
+            //insertion position is FOUND
+            if(curr==NULL){
+                prev->next=temp;
+                return;
+            }
+            else{
+                if(prev==NULL){
+                    temp->next=curr;
+                    *first=temp;
+                }
+                else{
+                    prev->next=temp;
+                    temp->next=curr;
+                }
+            }
+            //insertion is done
             break;
-        }
+            case 2:
+            //delete only!
+            if(previous==NULL)
+            {
+                *first=current->next;
+            }
+            else
+                previous->next=current->next;
+            free(current);
+            struct node *current=NULL;
+            break;
+
+        }//end of switch
+        current=*first;
     }//END OF IF
-     prev=curr;
-     curr=curr->next;
+     previous=current;
+     current=current->next;
  }//END OF WHILE
 }
-struct node* insert_new(struct node *first,struct node *e)
-{
-  struct node *temp;
-  temp=(struct node*)malloc(sizeof(struct node));
-  temp->next=NULL;
-  printf("Date in DD MM YYYY format : ");
-  struct tm date;
-  reset_date:
-  scanf("%d%d%d",&date.tm_mday,&date.tm_mon,&date.tm_year );
-  //See whether you have to deallocate the memory before returning
-  if(validate_date(date)==0){
-      printf("INVALID INPUT\n");
-      printf("Enter valid date in DD MM YYYY format: ");
-      goto reset_date;
-  }
-  if(validate_date(date)==2)
-  {
-      printf("That task is far into the future, chill.\n");
-      printf("Enter valid date in DD MM YYYY format: ");
-      goto reset_date;
-  }
-  strcpy(temp->task,e->task);
-  temp->priority=e->priority;
-  temp->date=e->date;
-  temp->status=0;
-  temp->cnt=e->cnt;
-  temp->s=e->s;
-  if(first==NULL){
-        first=temp;
-        return first;
-  }
-  struct node *curr;
-  struct node *prev;
-  prev=NULL;
-  curr=first;
-  while((curr!=NULL)&&(compare_date(temp->date,curr->date))){
-        prev=curr;
-        curr=curr->next;
-    }
-  if(compare_date(temp->date,prev->date)==2 && prev!=NULL){
-        curr=prev;
-        while((curr!=NULL)&&compare_date(temp->date,curr->date)==2&&(curr->priority<=temp->priority)){
-            prev=curr;
-            curr=curr->next;
-        }
-    }
-  if(curr==NULL){
-        prev->next=temp;
-        return first;
-    }
-  else{
-        if(prev==NULL){
-            temp->next=curr;
-            first=temp;
-        }
-        else{
-            prev->next=temp;
-            temp->next=curr;
-        }
-    }
-  return first;
-}*/
 void edit_subtask(struct node *p){
     //@RADHIKA WHAT IS THIS p WHAT's THIS NAMING SCHEME LEMME SEE IF YOU FIND THIS COMMENT -_-
 
