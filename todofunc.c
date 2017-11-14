@@ -190,10 +190,8 @@ void insert(struct node** list){
             printf("Enter subtask : ");
             struct sub *curr_s;
             curr_s=(struct sub*)malloc(sizeof(struct sub));
-            char subt0[100];
             scanf("\n");
-            fgets(subt0,100,stdin);
-            strcpy(curr_s->subt,subt0);
+            fgets(curr_s->subt,100,stdin);
             curr_s->next=NULL;
             prev_s->next=curr_s;
             prev_s=prev_s->next;
@@ -643,10 +641,8 @@ void edit_subtask(struct node *p){
                     }
                     if(ch==3){
                         printf("\nEnter changed subtask : ");
-                        char subt0[100];
                         scanf("\n");
-                        fgets(subt0,100,stdin);
-                        strcpy(curr_s->subt,subt0);
+                        fgets(curr_s->subt,100,stdin);
                     }
                 }
         }
