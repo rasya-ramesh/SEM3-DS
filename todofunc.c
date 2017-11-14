@@ -249,7 +249,7 @@ void edit_task(struct node** first,struct node * prev,struct node * current){
             free(current);
 
             no_of_tasks-=1;
-            break;
+            return;
         case 2:
             printf("\nSubmission Date in DD MM YYYY format : ");
             struct tm date;
@@ -281,6 +281,41 @@ void edit_task(struct node** first,struct node * prev,struct node * current){
              }
              current->priority=priority;
             break;
+    }
+    if(prev==NULL)
+    {
+        *first=current->next;
+    }
+    else
+        prev->next=current->next;
+
+    struct node *temp=current;
+    current=*first;
+    prev=NULL;
+    while((current!=NULL)&&(compare_date(temp->date,current->date))){
+        prev=current;
+        current=current->next;
+    }
+    if(prev!=NULL&&compare_date(temp->date,prev->date)==2){
+        current=prev;
+        while((current!=NULL)&&compare_date(temp->date,current->date)==2&&(current->priority<=temp->priority)){
+            prev=current;
+            current=current->next;
+        }
+    }
+    if(current==NULL){
+        prev->next=temp;
+        return;
+    }
+    else{
+        if(prev==NULL){
+            temp->next=current;
+            *first=temp;
+        }
+        else{
+            prev->next=temp;
+            temp->next=current;
+        }
     }
 }
 
