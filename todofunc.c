@@ -559,25 +559,28 @@ void extension(struct node **first){
             }
         }
         printf("Make a choice\n1. Enter new Submission Date\n2. Delete the task\n");
-        int choice=0;
-        scanf("%d",&choice );
+        int ch;
+        ch=getdig();
+        while(ch<1||ch>2){
+            printf("Make an appropriate choice.\n" );
+            ch=getdig();
+        }
         switch (choice)
         {
             case 1:
             printf("\nSubmission Date in DD MM YYYY format : ");
             struct tm date;
-            reset_date:
-            scanf("%d%d%d",&date.tm_mday,&date.tm_mon,&date.tm_year );
+            getdat(&date.tm_mday,&date.tm_mon,&date.tm_year);
             //See whether you have to deallocate the memory before returning
-            if(validate_date(date)==0){
+            while(validate_date(date)==0){
                 printf("INVALID INPUT\n");
                 printf("Enter valid date in DD MM YYYY format: ");
-                goto reset_date;
+                getdat(&date.tm_mday,&date.tm_mon,&date.tm_year);
             }
-            if(validate_date(date)==2){
-                printf("That task is far into the future, chill.\n");
-                printf("Enter valid date in DD MM YYYY format: ");
-                goto reset_date;
+            while(validate_date(date)==2){
+                printf("That task is far into the future.\n");
+                printf("Enter a closer date in DD MM YYYY format: ");
+                getdat(&date.tm_mday,&date.tm_mon,&date.tm_year);
             }
             current->date=date;
             if(previous==NULL)
