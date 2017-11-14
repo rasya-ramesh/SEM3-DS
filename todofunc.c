@@ -112,20 +112,17 @@ void display(struct node* temp, int cutoff, int stat){
 int compare_date(struct tm temp,struct tm curr){
     if((temp).tm_year>(curr).tm_year)
         return 1;
-    else if((temp).tm_year<=(curr).tm_year)
-    {
+    else if((temp).tm_year<(curr).tm_year)
+        return 0;
     if((temp).tm_mon>(curr).tm_mon)
         return 1;
-    else if((temp).tm_mon<=(curr).tm_mon)
-    {
+    else if((temp).tm_mon<(curr).tm_mon)
+        return 0;
     if((temp).tm_mday>(curr).tm_mday)
         return 1;
     else if((temp).tm_mday<(curr).tm_mday)
         return 0;
-    else
-        return 2;
-    }
-    }
+    return 2;
 }
 // int date_equal(struct node *temp,struct node *curr){
 //     if((temp->date).tm_year==(curr->date).tm_year)
