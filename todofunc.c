@@ -214,7 +214,7 @@ void insert(struct node** list){
         prev=curr;
         curr=curr->next;
     }
-    if(compare_date(temp->date,prev->date)==2 && prev!=NULL){
+    if(prev!=NULL && compare_date(temp->date,prev->date)==2){
         curr=prev;
         while((curr!=NULL)&&compare_date(temp->date,curr->date)==2&&(curr->priority<=temp->priority)){
             prev=curr;
