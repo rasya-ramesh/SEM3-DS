@@ -15,15 +15,16 @@ struct node{
     struct node *next;
     int status; // 1 if completed, 0 if not
     struct sub *s;
-    int t;
     int cnt;
 };
 
-void del_subtask(struct node *p);
+void edit_subtask(struct node *p);
 void insert(struct node**);
 void task_completed(struct node**);
 void display(struct node*, int,int);
-void delete_task(struct node**);
+void display_current(struct node*, int);
+void edit_task(struct node** first,struct node * prev,struct node * current);
+void task(struct node**);
 int compare_date(struct tm,struct tm);
 int date_equal(struct node *,struct node*);
 int validate_info(int );

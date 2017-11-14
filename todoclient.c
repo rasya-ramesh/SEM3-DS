@@ -23,8 +23,8 @@ int main()
         printf("3.View Highest Priority Tasks\n");
         printf("4.View Completed Tasks\n");
         printf("5.Mark Task as Completed\n");
-        printf("6.Delete Task\n");
-        printf("7.Exit\n");
+        printf("6.Edit/Delete Task\n");
+        printf("7.Save and Exit\n");
         scanf("%d",&ch);
         switch(ch){
         case 1:insert(&first);
@@ -37,7 +37,7 @@ int main()
                     break;
         case 5:task_completed(&first);
                 break;
-        case 6:delete_task(&first);
+        case 6:task(&first);
                 break;
         case 7:s(first);
                 exit(0);
