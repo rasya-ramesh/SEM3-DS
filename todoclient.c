@@ -8,7 +8,7 @@ int main()
     // first=NULL;//pointer to the first node of the list
     first=l();
     prompt(first);
-    extension(first);
+  //  extension(first);
     while(1){
         printf("\n1.Insert Task\n");
         printf("2.View Tasks\n");

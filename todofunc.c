@@ -241,7 +241,8 @@ void insert(struct node** list){
 
 
 void delete_task(struct node ** first){
-    char a,name[20];
+    char name[20];
+    int ch;
     struct node *current,*prev;
     prev=NULL;
     current=*first;
@@ -259,14 +260,20 @@ void delete_task(struct node ** first){
         printf("Task Name : %s",current->task);
         printf("Task Priority : %d\n",current->priority);
         printf("Submission Date : %d/%d/%d\n",(current->date).tm_mday,(current->date).tm_mon,(current->date).tm_year);
-        printf("\nDo you wish to delete above task (y/n) : ");
-        scanf("%c",&a);
-        if (a=='y'||a=='Y'){
+        printf("\nDo you wish to delete above \n1.task\n2.Subtasks: ");
+        scanf("%d",&ch);
+        switch (ch) {
+          case 1:
             if(prev==NULL)
                 *first=current->next;
             else
                 prev->next=current->next;
             free(current);
+            break;
+          case 2:
+            printf("subtask delete\n" );
+            del_subtask(current);
+            break;
         }
     }
 }
@@ -305,7 +312,7 @@ int validate_date(struct tm dt){
         return 0;
     if(dt.tm_year>(timeinfo->tm_year)+1902)
         return 2;
-    if((timeinfo->tm_mon)+1>dt.tm_mon||dt.tm_mon>12)
+    if((timeinfo->tm_mon)+1>dt.tm_mon||(dt.tm_mon>12))
         return 0;
     if(timeinfo->tm_mday>dt.tm_mday)
         return 0;
@@ -455,6 +462,7 @@ void prompt(struct node*first)
         if(!flag2)
             printf("None\n");
 }
+/*
 void extension(struct node *first)
 {
  time_t my_time;
@@ -599,4 +607,63 @@ struct node* insert_new(struct node *first,struct node *e)
         }
     }
   return first;
+}*/
+void del_subtask(struct node *p)
+{
+
+  if(p->t==1)
+  {
+    printf("1.Delete All Subtasks\n2.Delete a particular Subtask\n");
+    struct sub *curr_s;
+    curr_s=p->s;
+    struct sub *prev_s;
+    prev_s=NULL;
+    int ch,nos=0;
+    scanf("%d",&ch);
+    char subtname[100];
+    switch (ch) {
+      case 1:
+        while(curr_s!=NULL)
+        {
+          prev_s=curr_s;
+          curr_s=curr_s->next;
+          free(prev_s);
+          prev_s=NULL;
+        }
+        p->t=0;
+        p->s=NULL;
+        p->cnt=0;
+        break;
+      case 2:
+        printf("Enter subtask : ");
+        scanf("\n");
+        fgets(subtname,100,stdin);
+        struct sub *curr_s=p->s;
+        struct sub *prev_s=NULL;
+        while((curr_s!=NULL)&&(strcmp(curr_s->subt,subtname)!=0))
+        {
+          prev_s=curr_s;
+          curr_s=curr_s->next;
+          //nos+=1;
+        }
+        if(curr_s==NULL)
+          printf("NOT FOUND!\n" );
+        else
+        {
+          if(prev_s== NULL)
+            p->s=curr_s->next;
+          else
+            prev_s->next=curr_s->next;
+          p->cnt--;
+          free(curr_s);
+          if(p->cnt==0)
+          {
+            p->t=0;
+            p->s=NULL;
+          }
+        }
+    }
+  }
+  else
+  printf("No subtasks\n");
 }
