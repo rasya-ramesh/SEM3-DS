@@ -2,6 +2,25 @@
 
 int no_of_tasks=0;
 
+int getdig(){
+    char buf[5];
+    int i;
+    if (fgets(buf, sizeof(buf), stdin) != NULL)
+    {
+        i = atoi(buf);
+    }
+    return(i);
+}
+
+void getdat(int *date,int*month,int*year){
+    char buf[12];
+    if (fgets(buf, sizeof(buf), stdin) != NULL)
+    {
+        *date = atoi(buf);
+        *month=atoi(buf+2);
+        *year=atoi(buf+5);
+    }
+}
 //function to save file
 void s(struct node * q){
     remove("dat.txt");
@@ -144,27 +163,27 @@ void insert(struct node** list){
     fgets(name,100,stdin);
     printf("Priority in 1-5 : ");
     int priority;
-    reset_priority:
-    scanf("%d",&priority);
-    if(validate_info(priority)==0){
+
+    priority=getdig();
+    // scanf("%d",&priority);
+    while(validate_info(priority)==0){
         printf("INVALID PRIORITY\n");
         printf("Enter the priority again: ");
-        goto reset_priority;
+        priority=getdig();
      }
     printf("Submission Date in DD MM YYYY format : ");
     struct tm date;
-    reset_date:
-    scanf("%d%d%d",&date.tm_mday,&date.tm_mon,&date.tm_year );
+    getdat(&date.tm_mday,&date.tm_mon,&date.tm_year);
     //See whether you have to deallocate the memory before returning
-    if(validate_date(date)==0){
+    while(validate_date(date)==0){
         printf("INVALID INPUT\n");
         printf("Enter valid date in DD MM YYYY format: ");
-        goto reset_date;
+        getdat(&date.tm_mday,&date.tm_mon,&date.tm_year);
     }
-    if(validate_date(date)==2){
-        printf("That task is far into the future, chill.\n");
-        printf("Enter valid date in DD MM YYYY format: ");
-        goto reset_date;
+    while(validate_date(date)==2){
+        printf("That task is far into the future.\n");
+        printf("Enter a closer date in DD MM YYYY format: ");
+        getdat(&date.tm_mday,&date.tm_mon,&date.tm_year);
     }
     strcpy(temp->task,name);
     temp->priority=priority;
@@ -238,7 +257,11 @@ void insert(struct node** list){
 void edit_task(struct node** first,struct node * prev,struct node * current){
     printf("\n1.Delete Current Task\n2.Edit Current Task Submission Date\n3.Edit Current Task Priority\n");
     int ch,nos=0;
-    scanf("%d",&ch);
+    ch=getdig();
+    while(ch<1||ch>3){
+        printf("Make an appropriate choice.\n" );
+        ch=getdig();
+    }
     char subtname[100];
     switch (ch){
         case 1:
@@ -253,18 +276,17 @@ void edit_task(struct node** first,struct node * prev,struct node * current){
         case 2:
             printf("\nSubmission Date in DD MM YYYY format : ");
             struct tm date;
-            reset_date:
-            scanf("%d%d%d",&date.tm_mday,&date.tm_mon,&date.tm_year );
+            getdat(&date.tm_mday,&date.tm_mon,&date.tm_year);
             //See whether you have to deallocate the memory before returning
-            if(validate_date(date)==0){
+            while(validate_date(date)==0){
                 printf("INVALID INPUT\n");
                 printf("Enter valid date in DD MM YYYY format: ");
-                goto reset_date;
+                getdat(&date.tm_mday,&date.tm_mon,&date.tm_year);
             }
-            if(validate_date(date)==2){
-                printf("That task is far into the future, chill.\n");
-                printf("Enter valid date in DD MM YYYY format: ");
-                goto reset_date;
+            while(validate_date(date)==2){
+                printf("That task is far into the future.\n");
+                printf("Enter a closer date in DD MM YYYY format: ");
+                getdat(&date.tm_mday,&date.tm_mon,&date.tm_year);
             }
             current->date=date;
 
@@ -272,12 +294,12 @@ void edit_task(struct node** first,struct node * prev,struct node * current){
         case 3:
             printf("Priority in 1-5 : ");
             int priority;
-            reset_priority:
-            scanf("%d",&priority);
-            if(validate_info(priority)==0){
+            priority=getdig();
+            // scanf("%d",&priority);
+            while(validate_info(priority)==0){
                 printf("INVALID PRIORITY\n");
                 printf("Enter the priority again: ");
-                goto reset_priority;
+                priority=getdig();
              }
              current->priority=priority;
             break;
@@ -339,7 +361,11 @@ void task(struct node ** first){
     else{
         display_current(current,1);
         printf("\nDo you wish to edit/delete above \n1. Task\n2. Subtasks: ");
-        scanf("%d",&ch);
+        ch=getdig();
+        while(ch<1||ch>2){
+            printf("Make an appropriate choice.\n" );
+            ch=getdig();
+        }
         switch (ch) {
           case 1:
 
@@ -622,7 +648,11 @@ void edit_subtask(struct node *p){
         struct sub *prev_s;
         prev_s=NULL;
         int ch,nos=0;
-        scanf("%d",&ch);
+        ch=getdig();
+        while(ch<1||ch>3){
+            printf("Make an appropriate choice.\n" );
+            ch=getdig();
+        }
         char subtname[100];
         switch (ch){
             case 1:
@@ -639,11 +669,12 @@ void edit_subtask(struct node *p){
             case 3:
                 printf("Enter subtask no.: ");
                 int index=1,input;
-                scanf("%d",&input);
-                if(input>p->cnt||input<1){
+                input=getdig();
+                while(input<1||input>p->cnt){
                     printf("\n Number out of range. Try Again." );
-                    return;
+                    input=getdig();
                 }
+
                 struct sub *curr_s=p->s;
                 struct sub *prev_s=NULL;
                 while((curr_s!=NULL)&&(index<input)){
