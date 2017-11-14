@@ -17,7 +17,8 @@ struct node{
     struct sub *s;
     int cnt;
 };
-
+int getdig();
+void getdat(int*,int*,int*);
 void edit_subtask(struct node *p);
 void insert(struct node**);
 void task_completed(struct node**);
