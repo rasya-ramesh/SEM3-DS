@@ -351,15 +351,25 @@ int validate_date(struct tm dt){
     struct tm * timeinfo;
     time ( &rawtime );
     timeinfo = localtime ( &rawtime );
-    if((timeinfo->tm_year)+1900>dt.tm_year)
+    //if entered year is less than current year
+    if(dt.tm_year<(timeinfo->tm_year)+1900)
         return 0;
+    //if entered year and more than 2 years after current year
     if(dt.tm_year>(timeinfo->tm_year)+1902)
         return 2;
-    if((timeinfo->tm_mon)+1>dt.tm_mon||(dt.tm_mon>12))
+    //if entered month is less than current month granted that year is the same
+    if((dt.tm_mon<(timeinfo->tm_mon)+1)&&(dt.tm_year==(timeinfo->tm_year)+1900))
         return 0;
-    if(timeinfo->tm_mday>dt.tm_mday)
+    //if month is greater than 12 or less than 1
+    if(dt.tm_mon>12||dt.tm_mon<1)
         return 0;
-    switch(dt.tm_mon){
+    //if entered date is less than actual date given that year and month are the same
+    if(dt.tm_mday<timeinfo->tm_mday&&(timeinfo->tm_mon==dt.tm_mon)&&(timeinfo->tm_year==dt.tm_year))
+        return 0;
+    if(dt.tm_mday<1)
+        return 0;
+    switch(dt.tm_mon)
+    {
         case 1:
         case 3:
         case 5:
@@ -378,23 +388,29 @@ int validate_date(struct tm dt){
                     return 0;
                 break;
         case 2:
-                if((1900+dt.tm_year)%4 == 0){
-                    if((1900+dt.tm_year) %100 == 0){
-                        if ((1900+dt.tm_year)%400 == 0){
+                if((1900+dt.tm_year)%4 == 0)
+                {
+                    if((1900+dt.tm_year) %100 == 0)
+                    {
+                        if ((1900+dt.tm_year)%400 == 0)
+                        {
                             if(dt.tm_mday>29)
                                 return 0;
                         }
-                        else{
+                        else
+                        {
                             if(dt.tm_mday>28)
                                 return 0;
                         }
                     }
-                    else{
+                    else
+                    {
                         if(dt.tm_mday>29)
                             return 0;
                     }
                 }
-                else{
+                else
+                {
                     if(dt.tm_mday>28)
                         return 0;
                 }
