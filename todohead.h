@@ -31,3 +31,5 @@ int validate_date(struct tm);
 void s(struct node*);
 struct node * l();
 void prompt(struct node*first);
+void extension(struct node*first);
+struct node* insert_new(struct node *first,struct node *e);
