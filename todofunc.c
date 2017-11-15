@@ -1,7 +1,10 @@
 #include "todohead.h"
-int no_of_tasks=0;
-char  names[100][100];
 
+int no_of_tasks=0;
+char  names[100][100];//stores list of task names used to ensure uniqueness
+
+
+//checks if entered name is unique
 int isunique(char * name){
     int i;
     for (i=1;i<=no_of_tasks;i++){
@@ -10,24 +13,30 @@ int isunique(char * name){
     }
     return 1;
 }
+
+//gets character and converts it to be used as a number
 int getdig(){
     char buf[5];
     int i;
-    if (fgets(buf, sizeof(buf), stdin) != NULL)
-    {
+
+    if (fgets(buf, sizeof(buf), stdin) != NULL){//checks if input was successful
         i = atoi(buf);
     }
     return(i);
 }
+
+//function to read date in required format
 void getdat(int *date,int*month,int*year){
     char buf[12];
-    if (fgets(buf, sizeof(buf), stdin) != NULL)
-    {
+
+    if (fgets(buf, sizeof(buf), stdin) != NULL){//checks if input was successful
         *date = atoi(buf);
         *month=atoi(buf+2);
         *year=atoi(buf+5);
     }
 }
+
+
 //function to save file
 void s(struct node * q){
     remove("dat.txt");
@@ -38,17 +47,25 @@ void s(struct node * q){
     f=fopen("dat.txt","wb");
     struct sub * temp_sub;
     fwrite(&no_of_tasks,sizeof(int),1,f);
+
+    //loop for traversal through tasks
     while(temp!=NULL){
-        if(temp->s!=NULL)
+
+        if(temp->s!=NULL)//checks if given task node has subtask nodes
             temp_sub=temp->s;
-        fwrite(temp,sizeof(struct node),1,f);
+
+        fwrite(temp,sizeof(struct node),1,f);//writes task node into file
+
+        //loop for traversal through subtasks
         while(temp_sub!=NULL){
             fwrite(temp_sub,sizeof(struct sub),1,f);
             temp_sub=temp_sub->next;
         }
+
         temp=temp->next;
     }
 }
+
 //function to read file
 struct node * l(){
 
@@ -57,18 +74,19 @@ struct node * l(){
     if (f==NULL)
         return NULL;
     struct node *head,*prev,*curr;
-    // head=NULL;
     int i=0;
     int count;
     fread(&count,sizeof(int),1,f);
     no_of_tasks=count;
+
+    //loop to take in required number of tasks from the file and convert
+    //it into a linked list as required
     while(i<count){
         curr=(struct node *)malloc(sizeof(struct node));
         fread(curr,sizeof(struct node),1,f);
         curr->next=NULL;
         if (i==0){
             head=curr;
-            // printf("%s",head->task);
             prev=curr;
         }
         else{
@@ -78,6 +96,8 @@ struct node * l(){
         int cnt=curr->cnt;
         int j=0;
         struct sub *prev_s,*curr_s;
+
+        //loop appends subtasks
         while(j<curr->cnt){
             curr_s=(struct sub *)malloc(sizeof(struct sub));
             curr_s->next=NULL;
@@ -97,20 +117,27 @@ struct node * l(){
 
     return head;
 }
+
+//function to display required task
 void display_current(struct node*current,int i){
     printf("\n%d. Task Name : %s",i,current->task);
     printf("Task Priority : %d\n",current->priority);
     printf("Submission Date : %d/%d/%d\n",(current->date).tm_mday,(current->date).tm_mon,(current->date).tm_year);
     struct sub *subtask=current->s;
+
     if(subtask!=NULL)
         printf("Here are the subtasks for this task: ");
     int j=1;
+
+    //loop traverses through subtasks
     while(subtask!=NULL){
         printf("\n\t%d. Subtask Name: %s",j,subtask->subt);
         j++;
         subtask=subtask->next;
     }
 }
+
+//function to display tasks
 void display(struct node* temp, int cutoff, int stat){
     if(temp==NULL){
         printf("NO WORK TO DO! GO HAVE SOME FUN!!\n");
@@ -125,6 +152,8 @@ void display(struct node* temp, int cutoff, int stat){
         i+=1;
     }
 }
+
+//function to compare two dates
 int compare_date(struct tm temp,struct tm curr){
     if((temp).tm_year>(curr).tm_year)
         return 1;
@@ -140,23 +169,22 @@ int compare_date(struct tm temp,struct tm curr){
         return 0;
     return 2;
 }
-// int date_equal(struct node *temp,struct node *curr){
-//     if((temp->date).tm_year==(curr->date).tm_year)
-//       if((temp->date).tm_mon==(curr->date).tm_mon)
-//         if((temp->date).tm_wday==(curr->date).tm_wday)
-//           return 1;
-//     return 0;
-// }
+
+//function to insert tasks
 void insert(struct node** list){
     no_of_tasks+=1;
+
     if (no_of_tasks==100){
         printf("TASK COUNT OVERFLOW");
         return;
     }
+
     struct node *temp;
     temp=(struct node*)malloc(sizeof(struct node));
     temp->next=NULL;
+
     printf("Enter the following details! \n");
+
     char name[100],temp_sub;
     getuniquename:
     printf("Name of your task : ");
@@ -169,22 +197,22 @@ void insert(struct node** list){
         printf("Enter unique name\n" );
         goto getuniquename;
     }
+
     printf("Priority in 1-5 : ");
     int priority;
-
     priority=getdig();
-    // scanf("%d",&priority);
     while(validate_info(priority)==0){
         printf("INVALID PRIORITY\n");
         printf("Enter the priority again: ");
         priority=getdig();
      }
+
     printf("Submission Date in DD MM YYYY format : ");
     struct tm date;
     getdat(&date.tm_mday,&date.tm_mon,&date.tm_year);
-    //See whether you have to deallocate the memory before returning
+
     while(validate_date(date)==0){
-        printf("INVALID INPUT\n");
+        printf("INVALID INPUT : DATE HAS ALREADY PASSED.\n");
         printf("Enter valid date in DD MM YYYY format: ");
         getdat(&date.tm_mday,&date.tm_mon,&date.tm_year);
     }
@@ -193,11 +221,13 @@ void insert(struct node** list){
         printf("Enter a closer date in DD MM YYYY format: ");
         getdat(&date.tm_mday,&date.tm_mon,&date.tm_year);
     }
+
     strcpy(temp->task,name);
     temp->priority=priority;
     temp->date=date;
     temp->status=0;
     temp->cnt=0;
+
     printf("Does this task have subtasks?(y/n)" );
     scanf("\n");
     scanf("%c",&temp_sub);
@@ -263,6 +293,8 @@ void insert(struct node** list){
         }
     }
 }
+
+//function to edit tasks as required
 void edit_task(struct node** first,struct node * prev,struct node * current){
     printf("\n1.Delete Current Task\n2.Edit Current Task Submission Date\n3.Edit Current Task Priority\n");
     int ch,nos=0;
@@ -656,7 +688,6 @@ void extension(struct node **first){
  }//END OF WHILE
 }
 void edit_subtask(struct node *p){
-    //@RADHIKA WHAT IS THIS p WHAT's THIS NAMING SCHEME LEMME SEE IF YOU FIND THIS COMMENT -_-
 
     if(p->cnt>0){
         printf("\n1.Delete All Subtasks\n2.Delete a particular Subtask\n3.Edit a particular Subtask\n");
