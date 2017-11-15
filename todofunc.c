@@ -522,7 +522,7 @@ void extension(struct node **first){
   while(current!=NULL)
   {
     int v=compare_date(tl,current->date);
-    if(v==1)//local date is greater than task submission date
+    if((v==1)&&(current->status==0))//local date is greater than task submission date
     {
         printf("%d\n",v );
         //printf("Submission Date : %d/%d/%d\n",(current->date).tm_mday,(current->date).tm_mon,(current->date).tm_year);
