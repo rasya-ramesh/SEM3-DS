@@ -1,5 +1,15 @@
 #include "todohead.h"
 int no_of_tasks=0;
+char  names[100][100];
+
+int isunique(char * name){
+    int i;
+    for (i=1;i<=no_of_tasks;i++){
+        if(strcmp(names[i],name)==0)
+            return 0;
+    }
+    return 1;
+}
 int getdig(){
     char buf[5];
     int i;
@@ -144,14 +154,26 @@ int compare_date(struct tm temp,struct tm curr){
 // }
 void insert(struct node** list){
     no_of_tasks+=1;
+    if (no_of_tasks==100){
+        printf("TASK COUNT OVERFLOW");
+        return;
+    }
     struct node *temp;
     temp=(struct node*)malloc(sizeof(struct node));
     temp->next=NULL;
     printf("Enter the following details! \n");
     char name[100],temp_sub;
+    getuniquename:
     printf("Name of your task : ");
     scanf("\n");
     fgets(name,100,stdin);
+    if(isunique(name)){
+        strcpy(names[no_of_tasks],name);
+    }
+    else{
+        printf("Enter unique name\n" );
+        goto getuniquename;
+    }
     printf("Priority in 1-5 : ");
     int priority;
 
