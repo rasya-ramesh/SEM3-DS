@@ -624,6 +624,8 @@ void extension(struct node **first){
 
         }//end of switch
         current=*first;
+        //if date is extended or task is deleted. The current is shifted to first
+        continue;
     }//END OF IF
 
      previous=current;
