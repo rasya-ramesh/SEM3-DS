@@ -27,20 +27,15 @@ void s(struct node * q){
     FILE *f;
     f=fopen("dat.txt","wb");
     struct sub * temp_sub;
-
-    int i=0,j=0;
     fwrite(&no_of_tasks,sizeof(int),1,f);
     while(temp!=NULL){
-        j=0;
-        if(q->cnt!=0)
+        if(temp->s!=NULL)
             temp_sub=temp->s;
         fwrite(temp,sizeof(struct node),1,f);
         while(temp_sub!=NULL){
             fwrite(temp_sub,sizeof(struct sub),1,f);
             temp_sub=temp_sub->next;
-            j+=1;
         }
-        i+=1;
         temp=temp->next;
     }
 }
@@ -287,7 +282,6 @@ void edit_task(struct node** first,struct node * prev,struct node * current){
             printf("Priority in 1-5 : ");
             int priority;
             priority=getdig();
-            // scanf("%d",&priority);
             while(validate_info(priority)==0){
                 printf("INVALID PRIORITY\n");
                 printf("Enter the priority again: ");
@@ -304,6 +298,10 @@ void edit_task(struct node** first,struct node * prev,struct node * current){
         prev->next=current->next;
     struct node *temp=current;
     temp->next=NULL;
+    if(*first==NULL){
+        *first = temp;
+        return;
+    }
     current=*first;
     prev=NULL;
     while((current!=NULL)&&(compare_date(temp->date,current->date))){
@@ -638,7 +636,7 @@ void extension(struct node **first){
 void edit_subtask(struct node *p){
     //@RADHIKA WHAT IS THIS p WHAT's THIS NAMING SCHEME LEMME SEE IF YOU FIND THIS COMMENT -_-
 
-    if(p->cnt!=1){
+    if(p->cnt>0){
         printf("\n1.Delete All Subtasks\n2.Delete a particular Subtask\n3.Edit a particular Subtask\n");
         struct sub *curr_s;
         curr_s=p->s;
