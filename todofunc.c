@@ -27,15 +27,20 @@ void s(struct node * q){
     FILE *f;
     f=fopen("dat.txt","wb");
     struct sub * temp_sub;
+
+    int i=0,j=0;
     fwrite(&no_of_tasks,sizeof(int),1,f);
     while(temp!=NULL){
-        if(temp->s!=NULL)
+        j=0;
+        if(q->cnt!=0)
             temp_sub=temp->s;
         fwrite(temp,sizeof(struct node),1,f);
         while(temp_sub!=NULL){
             fwrite(temp_sub,sizeof(struct sub),1,f);
             temp_sub=temp_sub->next;
+            j+=1;
         }
+        i+=1;
         temp=temp->next;
     }
 }
@@ -282,6 +287,7 @@ void edit_task(struct node** first,struct node * prev,struct node * current){
             printf("Priority in 1-5 : ");
             int priority;
             priority=getdig();
+            // scanf("%d",&priority);
             while(validate_info(priority)==0){
                 printf("INVALID PRIORITY\n");
                 printf("Enter the priority again: ");
@@ -298,10 +304,6 @@ void edit_task(struct node** first,struct node * prev,struct node * current){
         prev->next=current->next;
     struct node *temp=current;
     temp->next=NULL;
-    if(*first==NULL){
-        *first = temp;
-        return;
-    }
     current=*first;
     prev=NULL;
     while((current!=NULL)&&(compare_date(temp->date,current->date))){
@@ -637,14 +639,14 @@ void edit_subtask(struct node *p){
     //@RADHIKA WHAT IS THIS p WHAT's THIS NAMING SCHEME LEMME SEE IF YOU FIND THIS COMMENT -_-
 
     if(p->cnt>0){
-        printf("\n1.Delete All Subtasks\n2.Delete a particular Subtask\n3.Edit a particular Subtask\n");
+        printf("\n1.Delete All Subtasks\n2.Delete a particular Subtask\n3.Edit a particular Subtask\n4.Add a Subtask\n");
         struct sub *curr_s;
         curr_s=p->s;
         struct sub *prev_s;
         prev_s=NULL;
         int ch,nos=0;
         ch=getdig();
-        while(ch<1||ch>3){
+        while(ch<1||ch>4){
             printf("Make an appropriate choice.\n" );
             ch=getdig();
         }
@@ -698,8 +700,41 @@ void edit_subtask(struct node *p){
                         fgets(curr_s->subt,100,stdin);
                     }
                 }
+              break;
+              case 4:
+              p->cnt+=1;
+              printf("Enter subtask : ");
+              struct sub *temp_s;
+              temp_s=(struct sub*)malloc(sizeof(struct sub));
+              scanf("\n");
+              fgets(temp_s->subt,100,stdin);
+                temp_s->next=NULL;
+              //printf("%s\n",temp_s->subt);
+              while(curr_s!=NULL)
+                {
+                  prev_s=curr_s;
+                  curr_s=curr_s->next;
+                }
+              prev_s->next=temp_s;
+
         }
     }
   else
-    printf("No subtasks\n");
+  {
+    printf("No subtasks,Do you want to add any?(y/n)\n");
+    scanf("\n");
+    char temp_sub;
+
+    scanf("%c",&temp_sub);
+    if (temp_sub=='y'){
+        p->cnt+=1;
+        struct sub *temp_s;
+        temp_s=(struct sub*)malloc(sizeof(struct sub));
+        printf("Enter subtask : ");
+        scanf("\n");
+        fgets(temp_s->subt,100,stdin);
+        temp_s->next=NULL;
+        p->s=temp_s;
+    }
+  }
 }
