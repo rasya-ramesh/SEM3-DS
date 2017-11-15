@@ -475,7 +475,7 @@ void prompt(struct node*first){
         printf("Here are the tasks you have to do today:\n");
     int i=1;
     while(current!=NULL){
-        if(current->date.tm_mday==timeinfo->tm_mday&&current->date.tm_mon==(timeinfo->tm_mon)+1&&current->date.tm_year==(timeinfo->tm_year)+1900){
+        if((current->status==0)&& current->date.tm_mday==timeinfo->tm_mday&&current->date.tm_mon==(timeinfo->tm_mon)+1&&current->date.tm_year==(timeinfo->tm_year)+1900){
             display_current(current,i);
             flag1=1;
             i++;
@@ -490,7 +490,7 @@ void prompt(struct node*first){
     if(current!=NULL)
         printf("\nHere are the other tasks you have to do this month:\n");
     while(current!=NULL){
-        if(current->date.tm_mon==(timeinfo->tm_mon)+1&&current->date.tm_year==(timeinfo->tm_year)+1900){
+        if((current->status==0)&&current->date.tm_mon==(timeinfo->tm_mon)+1&&current->date.tm_year==(timeinfo->tm_year)+1900){
             if(current->date.tm_mday!=timeinfo->tm_mday){
                 display_current(current,i);
                 flag2=1;
