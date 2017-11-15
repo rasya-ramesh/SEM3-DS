@@ -758,20 +758,14 @@ void edit_subtask(struct node *p){
                 }
               break;
               case 4:
-              p->cnt+=1;
-              printf("Enter subtask : ");
-              struct sub *temp_s;
-              temp_s=(struct sub*)malloc(sizeof(struct sub));
-              scanf("\n");
-              fgets(temp_s->subt,100,stdin);
-                temp_s->next=NULL;
-              //printf("%s\n",temp_s->subt);
-              while(curr_s!=NULL)
-                {
-                  prev_s=curr_s;
-                  curr_s=curr_s->next;
-                }
-              prev_s->next=temp_s;
+                      p->cnt+=1;
+                      printf("Enter subtask : ");
+                      struct sub *temp_s;
+                      temp_s=(struct sub*)malloc(sizeof(struct sub));
+                      scanf("\n");
+                      fgets(temp_s->subt,100,stdin);
+                        temp_s->next=p->s;
+                        p->s=temp_s;
 
         }
     }
