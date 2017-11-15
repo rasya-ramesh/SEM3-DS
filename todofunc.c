@@ -139,8 +139,12 @@ void display_current(struct node*current,int i){
 
 //function to display tasks
 void display(struct node* temp, int cutoff, int stat){
-    if(temp==NULL){
+    if(temp==NULL && stat==0){
         printf("NO WORK TO DO! GO HAVE SOME FUN!!\n");
+        return;
+    }
+    if(temp==NULL && stat==1){
+        printf("OOPS,NO COMPLETED TASKS!!\n");
         return;
     }
     int i=1;
@@ -385,12 +389,7 @@ void edit_task(struct node** first,struct node * prev,struct node * current){
         }
     }
 }
-<<<<<<< HEAD
 //function to look for the task to be edited
-=======
-
-//edit function
->>>>>>> 30a3df0619b1ba8576cf2c8098a4b41bb7ebe035
 void task(struct node ** first){
     char name[20];//name variable
     int ch;//choice of user
@@ -428,12 +427,7 @@ void task(struct node ** first){
         }
     }
 }
-<<<<<<< HEAD
 //to mark if the task is completed
-=======
-
-
->>>>>>> 30a3df0619b1ba8576cf2c8098a4b41bb7ebe035
 void task_completed(struct node**first){
     struct node *n=*first;//node points at beginning of the list
     char name[100];//name of task variable
@@ -710,16 +704,9 @@ void extension(struct node **first){
 
  }//END OF WHILE
 }
-<<<<<<< HEAD
 //function to edit subtasks
 void edit_subtask(struct node *p){
       if(p->cnt>0){
-=======
-
-void edit_subtask(struct node *p){
-
-    if(p->cnt>0){
->>>>>>> 30a3df0619b1ba8576cf2c8098a4b41bb7ebe035
         printf("\n1.Delete All Subtasks\n2.Delete a particular Subtask\n3.Edit a particular Subtask\n4.Add a Subtask\n");
         struct sub *curr_s;
         curr_s=p->s;//node points at beginning of subtask list
@@ -782,23 +769,6 @@ void edit_subtask(struct node *p){
                     }
                 }
               break;
-<<<<<<< HEAD
-              case 4://to add subtasks
-              p->cnt+=1;
-              printf("Enter subtask : ");
-              struct sub *temp_s;
-              temp_s=(struct sub*)malloc(sizeof(struct sub));
-              scanf("\n");
-              fgets(temp_s->subt,100,stdin);
-                temp_s->next=NULL;
-              //printf("%s\n",temp_s->subt);
-              while(curr_s!=NULL)
-                {
-                  prev_s=curr_s;
-                  curr_s=curr_s->next;
-                }
-              prev_s->next=temp_s;
-=======
               case 4:
                       p->cnt+=1;
                       printf("Enter subtask : ");
@@ -808,7 +778,6 @@ void edit_subtask(struct node *p){
                       fgets(temp_s->subt,100,stdin);
                         temp_s->next=p->s;
                         p->s=temp_s;
->>>>>>> 30a3df0619b1ba8576cf2c8098a4b41bb7ebe035
 
         }
     }
