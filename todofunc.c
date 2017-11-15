@@ -233,6 +233,7 @@ void insert(struct node** list){
     }
     if(prev!=NULL && compare_date(temp->date,prev->date)==2){
         curr=prev;
+        prev=NULL;
         while((curr!=NULL)&&compare_date(temp->date,curr->date)==2&&(curr->priority<=temp->priority)){
             prev=curr;
             curr=curr->next;
@@ -321,6 +322,7 @@ void edit_task(struct node** first,struct node * prev,struct node * current){
     }
     if(prev!=NULL&&compare_date(temp->date,prev->date)==2){
         current=prev;
+        prev=NULL;
         while((current!=NULL)&&compare_date(temp->date,current->date)==2&&(current->priority<=temp->priority)){
             prev=current;
             current=current->next;
@@ -600,6 +602,7 @@ void extension(struct node **first){
             }
             if(prev!=NULL && compare_date(temp->date,prev->date)==2){
                 curr=prev;
+                prev=NULL;
                 while((curr!=NULL)&&compare_date(temp->date,curr->date)==2&&(curr->priority<=temp->priority)){
                     prev=curr;
                     curr=curr->next;
