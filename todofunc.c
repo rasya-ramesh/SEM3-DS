@@ -233,7 +233,8 @@ void insert(struct node** list){
     }
     if(prev!=NULL && compare_date(temp->date,prev->date)==2){
         curr=prev;
-        while((curr!=NULL)&&compare_date(temp->date,curr->date)==2&&(curr->priority<=temp->priority)){
+        prev=NULL;
+        while((curr!=NULL)&&(compare_date(temp->date,curr->date)==2&&(curr->priority<=temp->priority))){
             prev=curr;
             curr=curr->next;
         }
@@ -310,7 +311,6 @@ void edit_task(struct node** first,struct node * prev,struct node * current){
     }
     else
         prev->next=current->next;
-
     struct node *temp=current;
     temp->next=NULL;
     current=*first;
@@ -534,13 +534,15 @@ void extension(struct node **first){
   struct node*current;
   current=*first;//current points at first
   struct node*previous=NULL;
-  struct node*prev=NULL,*curr=NULL;
-  while(current->next!=NULL)
+
+  while(current!=NULL)
   {
     int v=compare_date(tl,current->date);
     if(v==1)//local date is greater than task submission date
     {
-        printf("System Date : %d/%d/%d\n",tl.tm_mday,tl.tm_mon,tl.tm_year);
+        printf("%d\n",v );
+        //printf("Submission Date : %d/%d/%d\n",(current->date).tm_mday,(current->date).tm_mon,(current->date).tm_year);
+        //printf("System Date : %d/%d/%d\n",tl.tm_mday,tl.tm_mon,tl.tm_year);
         printf("Deadline is Over for the task");
         printf("Task Name : %s",current->task);
         printf("Task Priority : %d\n",current->priority);
@@ -589,7 +591,9 @@ void extension(struct node **first){
             }
             else
                 previous->next=current->next;
+            current->next=NULL;
             //node is delinked
+            struct node*prev=NULL,*curr=NULL;
             struct node *temp=current;//temp points to delinked node
             temp->next=NULL;//temp is not linked
             curr=*first;//iterator initialised
@@ -608,7 +612,6 @@ void extension(struct node **first){
             //insertion position is FOUND
             if(curr==NULL){
                 prev->next=temp;
-                return;
             }
             else{
                 if(prev==NULL){
@@ -631,14 +634,17 @@ void extension(struct node **first){
             else
                 previous->next=current->next;
             free(current);
-            struct node *current=NULL;
+            no_of_tasks-=1;
             break;
 
         }//end of switch
         current=*first;
     }//END OF IF
+
      previous=current;
-     current=current->next;
+     if(current!=NULL)
+        current=current->next;
+
  }//END OF WHILE
 }
 void edit_subtask(struct node *p){
