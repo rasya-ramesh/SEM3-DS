@@ -46,19 +46,12 @@ void s(struct node * q){
     FILE *f;
     f=fopen("dat.txt","wb");
     struct sub * temp_sub;
-
-    int i=0,j=0;
     fwrite(&no_of_tasks,sizeof(int),1,f);
 
     //loop for traversal through tasks
     while(temp!=NULL){
-<<<<<<< HEAD
 
         if(temp->s!=NULL)//checks if given task node has subtask nodes
-=======
-        j=0;
-        if(q->cnt!=0)
->>>>>>> f94ce25d7242a44430510ad758b65580115648ad
             temp_sub=temp->s;
 
         fwrite(temp,sizeof(struct node),1,f);//writes task node into file
@@ -67,13 +60,8 @@ void s(struct node * q){
         while(temp_sub!=NULL){
             fwrite(temp_sub,sizeof(struct sub),1,f);
             temp_sub=temp_sub->next;
-            j+=1;
         }
-<<<<<<< HEAD
 
-=======
-        i+=1;
->>>>>>> f94ce25d7242a44430510ad758b65580115648ad
         temp=temp->next;
     }
 }
@@ -348,7 +336,6 @@ void edit_task(struct node** first,struct node * prev,struct node * current){
             printf("Priority in 1-5 : ");
             int priority;
             priority=getdig();
-            // scanf("%d",&priority);
             while(validate_info(priority)==0){
                 printf("INVALID PRIORITY\n");
                 printf("Enter the priority again: ");
@@ -365,6 +352,10 @@ void edit_task(struct node** first,struct node * prev,struct node * current){
         prev->next=current->next;
     struct node *temp=current;
     temp->next=NULL;
+    if(*first==NULL){
+        *first = temp;
+        return;
+    }
     current=*first;
     prev=NULL;
     while((current!=NULL)&&(compare_date(temp->date,current->date))){
@@ -394,6 +385,8 @@ void edit_task(struct node** first,struct node * prev,struct node * current){
         }
     }
 }
+
+//edit function
 void task(struct node ** first){
     char name[20];
     int ch;
@@ -412,7 +405,7 @@ void task(struct node ** first){
 
     else{
         display_current(current,1);
-        printf("\nDo you wish to edit/delete above \n1. Task\n2. Subtasks: ");
+        printf("\nDo you wish to edit/delete above \n1. Task\n2. Subtasks \n");
         ch=getdig();
         while(ch<1||ch>2){
             printf("Make an appropriate choice.\n" );
@@ -430,6 +423,8 @@ void task(struct node ** first){
         }
     }
 }
+
+
 void task_completed(struct node**first){
     struct node *n=*first;
     char name[100];
@@ -696,6 +691,7 @@ void extension(struct node **first){
 
  }//END OF WHILE
 }
+
 void edit_subtask(struct node *p){
 
     if(p->cnt>0){
