@@ -355,23 +355,25 @@ void edit_task(struct node** first,struct node * prev,struct node * current){
         }
     }
 }
+//function to look for the task to be edited
 void task(struct node ** first){
-    char name[20];
-    int ch;
-    struct node *current,*prev;
-    prev=NULL;
-    current=*first;
+    char name[20];//name variable
+    int ch;//choice of user
+    struct node *current,*prev;//iterator variables
+    prev=NULL;//prev initialised
+    current=*first;//curr points at first node of list now
     printf("\nEnter the name of the task you wish to edit/delete: ");
     scanf("\n");
     fgets(name,100,stdin);
-    while((current!=NULL)&&(strcmp(current->task,name)!=0)){
+    while((current!=NULL)&&(strcmp(current->task,name)!=0)){//loops until either end of list is reached or task is found
         prev=current;
-        current=current->next;
+        current=current->next;//moves to next node
     }
     if(current==NULL)
-        printf("This task does not exist\n");
+        printf("This task does not exist\n");//not found
 
     else{
+        //displays the task
         display_current(current,1);
         printf("\nDo you wish to edit/delete above \n1. Task\n2. Subtasks: ");
         ch=getdig();
@@ -381,19 +383,20 @@ void task(struct node ** first){
         }
         switch (ch) {
           case 1:
-
+            //edit main task
             edit_task(first,prev,current);
             break;
           case 2:
-
+            //edit subtasks
             edit_subtask(current);
             break;
         }
     }
 }
+//to mark if the task is completed
 void task_completed(struct node**first){
-    struct node *n=*first;
-    char name[100];
+    struct node *n=*first;//node points at beginning of the list
+    char name[100];//name of task variable
     printf("\nEnter name of task completed : ");
     scanf("\n");
     fgets(name,100,stdin);
@@ -410,16 +413,19 @@ void task_completed(struct node**first){
         printf("This task does not exist\n");
     }
 }
+//Validation of priority.
 int validate_info(int p){
     if(!(p>=1 && p<=5))
         return 0;
     return 1;
 }
+//Validation of date ,if its greater than today's date
+//returns 1 if greater than or equal to system date ,0 otherwise
 int validate_date(struct tm dt){
     time_t rawtime;
     struct tm * timeinfo;
     time ( &rawtime );
-    timeinfo = localtime ( &rawtime );
+    timeinfo = localtime ( &rawtime );//to recieve system time
     //if entered year is less than current year
     if(dt.tm_year<(timeinfo->tm_year)+1900)
         return 0;
@@ -435,6 +441,7 @@ int validate_date(struct tm dt){
     //if entered date is less than actual date given that year and month are the same
     if(dt.tm_mday<timeinfo->tm_mday&&(timeinfo->tm_mon+1==dt.tm_mon)&&(timeinfo->tm_year+1900==dt.tm_year))
         return 0;
+    //if entered date is less than 1
     if(dt.tm_mday<1)
         return 0;
     switch(dt.tm_mon)
@@ -445,18 +452,19 @@ int validate_date(struct tm dt){
         case 7:
         case 8:
         case 10:
-        case 12:
+        case 12://for months with 31 days
                 if(dt.tm_mday>31)
                     return 0;
                 break;
         case 4:
         case 6:
         case 9:
-        case 11:
+        case 11://for months with 30 days
                 if(dt.tm_mday>30)
                     return 0;
                 break;
-        case 2:
+        case 2://for february
+        //checking if its leap year
                 if((1900+dt.tm_year)%4 == 0)
                 {
                     if((1900+dt.tm_year) %100 == 0)
@@ -487,17 +495,19 @@ int validate_date(struct tm dt){
     }
     return 1;
 }
+//function to prompt user about the tasks which are due in existing day and month
 void prompt(struct node*first){
-    struct node *current=first;
-    int flag1=0,flag2=0;
+    struct node *current=first;//ponter to beginning of list
+    int flag1=0,flag2=0;//flags
     time_t rawtime;
     struct tm * timeinfo;
     time ( &rawtime );
-    timeinfo = localtime ( &rawtime );
+    timeinfo = localtime ( &rawtime );//system date stored in tm structure
     if(current!=NULL)
         printf("Here are the tasks you have to do today:\n");
     int i=1;
     while(current!=NULL){
+      //to find the tasks existing in the day
         if((current->status==0)&& current->date.tm_mday==timeinfo->tm_mday&&current->date.tm_mon==(timeinfo->tm_mon)+1&&current->date.tm_year==(timeinfo->tm_year)+1900){
             display_current(current,i);
             flag1=1;
@@ -513,6 +523,7 @@ void prompt(struct node*first){
     if(current!=NULL)
         printf("\nHere are the other tasks you have to do this month:\n");
     while(current!=NULL){
+      //to find the tasks in the current month
         if((current->status==0)&&current->date.tm_mon==(timeinfo->tm_mon)+1&&current->date.tm_year==(timeinfo->tm_year)+1900){
             if(current->date.tm_mday!=timeinfo->tm_mday){
                 display_current(current,i);
@@ -526,6 +537,8 @@ void prompt(struct node*first){
         if(!flag2)
             printf("None\n");
 }
+//function to give user option to extend date if the submission date of task
+// has passed and it hasnt been completed
 void extension(struct node **first){
   if(*first==NULL)
     return;
@@ -547,10 +560,8 @@ void extension(struct node **first){
     int v=compare_date(tl,current->date);
     if((v==1)&&(current->status==0))//local date is greater than task submission date
     {
-        printf("%d\n",v );
-        //printf("Submission Date : %d/%d/%d\n",(current->date).tm_mday,(current->date).tm_mon,(current->date).tm_year);
-        //printf("System Date : %d/%d/%d\n",tl.tm_mday,tl.tm_mon,tl.tm_year);
-        printf("Deadline is Over for the task");
+
+        printf("Deadline is Over for the task");//Prints tasks for which date has passed
         printf("Task Name : %s",current->task);
         printf("Task Priority : %d\n",current->priority);
         printf("Submission Date : %d/%d/%d\n",(current->date).tm_mday,(current->date).tm_mon,(current->date).tm_year);
@@ -567,6 +578,7 @@ void extension(struct node **first){
                 prev_s=prev_s->next;
             }
         }
+        //user makes the choice
         printf("Make a choice\n1. Enter new Submission Date\n2. Delete the task\n");
         int ch;
         ch=getdig();
@@ -592,6 +604,7 @@ void extension(struct node **first){
                 getdat(&date.tm_mday,&date.tm_mon,&date.tm_year);
             }
             current->date=date;
+            //new submission date is assigned to the date of existing task
             if(previous==NULL)
             {
                 *first=current->next;
@@ -642,7 +655,7 @@ void extension(struct node **first){
             else
                 previous->next=current->next;
             free(current);
-            no_of_tasks-=1;
+            no_of_tasks-=1;//no of tasks s reduced
             break;
 
         }//end of switch
@@ -657,13 +670,12 @@ void extension(struct node **first){
 
  }//END OF WHILE
 }
+//function to edit subtasks
 void edit_subtask(struct node *p){
-    //@RADHIKA WHAT IS THIS p WHAT's THIS NAMING SCHEME LEMME SEE IF YOU FIND THIS COMMENT -_-
-
-    if(p->cnt>0){
+      if(p->cnt>0){
         printf("\n1.Delete All Subtasks\n2.Delete a particular Subtask\n3.Edit a particular Subtask\n4.Add a Subtask\n");
         struct sub *curr_s;
-        curr_s=p->s;
+        curr_s=p->s;//node points at beginning of subtask list
         struct sub *prev_s;
         prev_s=NULL;
         int ch,nos=0;
@@ -675,6 +687,7 @@ void edit_subtask(struct node *p){
         char subtname[100];
         switch (ch){
             case 1:
+                //deletes all subtasks
                 while(curr_s!=NULL){
                     prev_s=curr_s;
                     curr_s=curr_s->next;
@@ -700,7 +713,6 @@ void edit_subtask(struct node *p){
                     prev_s=curr_s;
                     curr_s=curr_s->next;
                     index+=1;
-                    //nos+=1;
                 }
                 if(curr_s==NULL)
                     printf("NOT FOUND!\n" );
@@ -723,7 +735,7 @@ void edit_subtask(struct node *p){
                     }
                 }
               break;
-              case 4:
+              case 4://to add subtasks
               p->cnt+=1;
               printf("Enter subtask : ");
               struct sub *temp_s;
@@ -743,6 +755,7 @@ void edit_subtask(struct node *p){
     }
   else
   {
+    //to add subtasks cause there arent any!
     printf("No subtasks,Do you want to add any?(y/n)\n");
     scanf("\n");
     char temp_sub;
