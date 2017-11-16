@@ -36,3 +36,4 @@ void prompt(struct node*first);
 void extension(struct node**first);
 struct node* insert_new(struct node *first,struct node *e);
 int isunique(char *);
+void next();

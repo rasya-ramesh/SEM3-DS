@@ -3,6 +3,21 @@
 int no_of_tasks=0;
 char  names[100][100];//stores list of task names used to ensure uniqueness
 
+void next(struct node *q){
+    char ch;
+    printf("\nContinue?(y/n)");
+    scanf("\n%c",&ch);
+    if(ch=='y'){
+        system("clear");
+        printf("\n\n-------------------------------------------------------------------");
+        printf("\n\t\t\t    MENU ");
+        printf("\n-------------------------------------------------------------------\n");
+    }
+    else{
+        s(q);
+        exit(0);
+    }
+}
 
 //checks if entered name is unique
 int isunique(char * name){
@@ -39,6 +54,7 @@ void getdat(int *date,int*month,int*year){
 
 //function to save file
 void s(struct node * q){
+    printf("\n\nTHANK YOU for using TODO!!!\n");
     remove("dat.txt");
     if (q==NULL)
         return;
@@ -96,7 +112,7 @@ struct node * l(){
         int cnt=curr->cnt;
         int j=0;
         struct sub *prev_s,*curr_s;
-
+        strcpy(names[i+1],curr->task);
         //loop appends subtasks
         while(j<curr->cnt){
             curr_s=(struct sub *)malloc(sizeof(struct sub));
@@ -259,6 +275,7 @@ void insert(struct node** list){
     if(*list==NULL){
 
         *list=temp;
+        next(*list);
         return;
     }
     struct node *curr;
@@ -280,6 +297,7 @@ void insert(struct node** list){
     }
     if(curr==NULL){
         prev->next=temp;
+        next(*list);
         return;
     }
     else{
@@ -292,6 +310,7 @@ void insert(struct node** list){
             temp->next=curr;
         }
     }
+    next(*list);
 }
 
 //function to edit tasks as required
@@ -354,6 +373,7 @@ void edit_task(struct node** first,struct node * prev,struct node * current){
     temp->next=NULL;
     if(*first==NULL){
         *first = temp;
+
         return;
     }
     current=*first;
@@ -422,6 +442,7 @@ void task(struct node ** first){
             break;
         }
     }
+    next(*first);
 }
 
 
@@ -443,12 +464,15 @@ void task_completed(struct node**first){
     if (n->status!=1){
         printf("This task does not exist\n");
     }
+    next(*first);
 }
+
 int validate_info(int p){
     if(!(p>=1 && p<=5))
         return 0;
     return 1;
 }
+
 int validate_date(struct tm dt){
     time_t rawtime;
     struct tm * timeinfo;
