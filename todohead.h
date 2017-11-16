@@ -28,6 +28,7 @@ void edit_task(struct node** first,struct node * prev,struct node * current);//f
 void task(struct node**);//function to look for the task to be edited
 int compare_date(struct tm,struct tm);//function to compare two dates
 int date_equal(struct node *,struct node*);
+<<<<<<< HEAD
 int validate_info(int );//Validation of priority.
 int validate_date(struct tm);//Validation of date ,if its greater than today's date
 //returns 1 if greater than or equal to system date ,0 otherwise
@@ -37,3 +38,14 @@ void prompt(struct node*first);//function to prompt user about the tasks which a
 void extension(struct node**first);//function to give user option to extend date if the submission date of task
 // has passed and it hasnt been completed
 int isunique(char *);//checks if entered name is unique
+=======
+int validate_info(int );
+int validate_date(struct tm);
+void s(struct node*);
+struct node * l();
+void prompt(struct node*first);
+void extension(struct node**first);
+struct node* insert_new(struct node *first,struct node *e);
+int isunique(char *);
+void next();
+>>>>>>> 854568b2fa9b1939cc13aba5d61b5e2f0dca67e8
