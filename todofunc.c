@@ -1,7 +1,5 @@
 #include "todohead.h"
-
 int no_of_tasks=0;
-
 int getdig(){
     char buf[5];
     int i;
@@ -11,7 +9,6 @@ int getdig(){
     }
     return(i);
 }
-
 void getdat(int *date,int*month,int*year){
     char buf[12];
     if (fgets(buf, sizeof(buf), stdin) != NULL)
@@ -47,7 +44,6 @@ void s(struct node * q){
         temp=temp->next;
     }
 }
-
 //function to read file
 struct node * l(){
 
@@ -96,7 +92,6 @@ struct node * l(){
 
     return head;
 }
-
 void display_current(struct node*current,int i){
     printf("\n%d. Task Name : %s",i,current->task);
     printf("Task Priority : %d\n",current->priority);
@@ -111,8 +106,6 @@ void display_current(struct node*current,int i){
         subtask=subtask->next;
     }
 }
-
-
 void display(struct node* temp, int cutoff, int stat){
     if(temp==NULL){
         printf("NO WORK TO DO! GO HAVE SOME FUN!!\n");
@@ -127,7 +120,6 @@ void display(struct node* temp, int cutoff, int stat){
         i+=1;
     }
 }
-
 int compare_date(struct tm temp,struct tm curr){
     if((temp).tm_year>(curr).tm_year)
         return 1;
@@ -150,7 +142,6 @@ int compare_date(struct tm temp,struct tm curr){
 //           return 1;
 //     return 0;
 // }
-
 void insert(struct node** list){
     no_of_tasks+=1;
     struct node *temp;
@@ -254,7 +245,6 @@ void insert(struct node** list){
         }
     }
 }
-
 void edit_task(struct node** first,struct node * prev,struct node * current){
     printf("\n1.Delete Current Task\n2.Edit Current Task Submission Date\n3.Edit Current Task Priority\n");
     int ch,nos=0;
@@ -321,6 +311,7 @@ void edit_task(struct node** first,struct node * prev,struct node * current){
     }
     if(prev!=NULL&&compare_date(temp->date,prev->date)==2){
         current=prev;
+        prev=NULL;
         while((current!=NULL)&&compare_date(temp->date,current->date)==2&&(current->priority<=temp->priority)){
             prev=current;
             current=current->next;
@@ -341,7 +332,6 @@ void edit_task(struct node** first,struct node * prev,struct node * current){
         }
     }
 }
-
 void task(struct node ** first){
     char name[20];
     int ch;
@@ -378,9 +368,6 @@ void task(struct node ** first){
         }
     }
 }
-
-
-
 void task_completed(struct node**first){
     struct node *n=*first;
     char name[100];
@@ -405,7 +392,6 @@ int validate_info(int p){
         return 0;
     return 1;
 }
-
 int validate_date(struct tm dt){
     time_t rawtime;
     struct tm * timeinfo;
@@ -478,7 +464,6 @@ int validate_date(struct tm dt){
     }
     return 1;
 }
-
 void prompt(struct node*first){
     struct node *current=first;
     int flag1=0,flag2=0;
@@ -518,7 +503,6 @@ void prompt(struct node*first){
         if(!flag2)
             printf("None\n");
 }
-//void extension(struct node **first){}
 void extension(struct node **first){
   if(*first==NULL)
     return;
@@ -604,6 +588,7 @@ void extension(struct node **first){
             }
             if(prev!=NULL && compare_date(temp->date,prev->date)==2){
                 curr=prev;
+                prev=NULL;
                 while((curr!=NULL)&&compare_date(temp->date,curr->date)==2&&(curr->priority<=temp->priority)){
                     prev=curr;
                     curr=curr->next;
