@@ -469,22 +469,14 @@ void task_completed(struct node**first){
     }
     next(*first);
 }
-<<<<<<< HEAD
-
-=======
 //Validation of priority.
->>>>>>> 5a1f20e7c3b27dac8600ca0007c285625be4497c
 int validate_info(int p){
     if(!(p>=1 && p<=5))
         return 0;
     return 1;
 }
-<<<<<<< HEAD
-
-=======
 //Validation of date ,if its greater than today's date
 //returns 1 if greater than or equal to system date ,0 otherwise
->>>>>>> 5a1f20e7c3b27dac8600ca0007c285625be4497c
 int validate_date(struct tm dt){
     time_t rawtime;
     struct tm * timeinfo;
