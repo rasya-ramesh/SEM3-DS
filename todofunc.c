@@ -3,21 +3,6 @@
 int no_of_tasks=0;
 char  names[100][100];//stores list of task names used to ensure uniqueness
 
-void next(struct node *q){
-    char ch;
-    printf("\nContinue?(y/n)");
-    scanf("\n%c",&ch);
-    if(ch=='y'){
-        system("clear");
-        printf("\n\n-------------------------------------------------------------------");
-        printf("\n\t\t\t    MENU ");
-        printf("\n-------------------------------------------------------------------\n");
-    }
-    else{
-        s(q);
-        exit(0);
-    }
-}
 
 //checks if entered name is unique
 int isunique(char * name){
@@ -279,7 +264,6 @@ void insert(struct node** list){
     if(*list==NULL){
 
         *list=temp;
-        next(*list);
         return;
     }
     struct node *curr;
@@ -301,7 +285,6 @@ void insert(struct node** list){
     }
     if(curr==NULL){
         prev->next=temp;
-        next(*list);
         return;
     }
     else{
@@ -314,7 +297,6 @@ void insert(struct node** list){
             temp->next=curr;
         }
     }
-    next(*list);
 }
 
 //function to edit tasks as required
@@ -343,7 +325,7 @@ void edit_task(struct node** first,struct node * prev,struct node * current){
             getdat(&date.tm_mday,&date.tm_mon,&date.tm_year);
             //See whether you have to deallocate the memory before returning
             while(validate_date(date)==0){
-                printf("INVALID INPUT\n");
+                printf("INVALID INPUT : DATE HAS ALREADY PASSED.\n");
                 printf("Enter valid date in DD MM YYYY format: ");
                 getdat(&date.tm_mday,&date.tm_mon,&date.tm_year);
             }
@@ -446,7 +428,6 @@ void task(struct node ** first){
             break;
         }
     }
-    next(*first);
 }
 //to mark if the task is completed
 void task_completed(struct node**first){
@@ -467,7 +448,6 @@ void task_completed(struct node**first){
     if (n->status!=1){
         printf("This task does not exist\n");
     }
-    next(*first);
 }
 //Validation of priority.
 int validate_info(int p){
@@ -610,32 +590,19 @@ void extension(struct node **first){
   struct node*current;
   current=*first;//current points at first
   struct node*previous=NULL;
-
+  int i=1;
   while(current!=NULL)
   {
     int v=compare_date(tl,current->date);
     if((v==1)&&(current->status==0))//local date is greater than task submission date
     {
-
-        printf("Deadline is Over for the task");//Prints tasks for which date has passed
-        printf("Task Name : %s",current->task);
-        printf("Task Priority : %d\n",current->priority);
-        printf("Submission Date : %d/%d/%d\n",(current->date).tm_mday,(current->date).tm_mon,(current->date).tm_year);
-        int j=0;
-        if(current->s!=NULL)
-        {
-            printf("Subtasks:\n");
-            struct sub *prev_s;
-            prev_s=current->s;
-            while(prev_s!=NULL)
-            {
-                j+=1;
-                printf("%d. %s",j,prev_s->subt);
-                prev_s=prev_s->next;
-            }
-        }
+        printf("\n\n-------------------------------------------------------------------");
+        printf("\n\t\t\t    DISCLAIMER!!!!! ");
+        printf("\n-------------------------------------------------------------------\n");
+        printf("\n\nDeadline is Over for the task\n\n");//Prints tasks for which date has passed
+        display_current(current,i);
         //user makes the choice
-        printf("Make a choice\n1. Enter new Submission Date\n2. Delete the task\n");
+        printf("\nMake a choice\n1. Enter new Submission Date\n2. Delete the task\n");
         int ch;
         ch=getdig();
         while(ch<1||ch>2){
@@ -650,7 +617,7 @@ void extension(struct node **first){
             getdat(&date.tm_mday,&date.tm_mon,&date.tm_year);
             //See whether you have to deallocate the memory before returning
             while(validate_date(date)==0){
-                printf("INVALID INPUT\n");
+                printf("INVALID INPUT : DATE HAS ALREADY PASSED.\n");
                 printf("Enter valid date in DD MM YYYY format: ");
                 getdat(&date.tm_mday,&date.tm_mon,&date.tm_year);
             }
@@ -687,7 +654,10 @@ void extension(struct node **first){
                 }
             }
             //insertion position is FOUND
-            if(curr==NULL){
+            if(curr==NULL&&prev==NULL){
+                *first=temp;
+            }
+            else if(curr==NULL){
                 prev->next=temp;
             }
             else{
@@ -707,10 +677,13 @@ void extension(struct node **first){
             if(previous==NULL)
             {
                 *first=current->next;
+                previous=NULL;
             }
             else
                 previous->next=current->next;
-            free(current);
+            struct node* q=current;
+            current=*first;
+            free(q);
             no_of_tasks-=1;//no of tasks s reduced
             break;
 
@@ -723,7 +696,6 @@ void extension(struct node **first){
      previous=current;
      if(current!=NULL)
         current=current->next;
-
  }//END OF WHILE
 }
 //function to edit subtasks

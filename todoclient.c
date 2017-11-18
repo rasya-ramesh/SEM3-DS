@@ -13,7 +13,10 @@ int main()
     first=l();
     prompt(first);
     extension(&first);
+    char c='n';
     while(1){
+        if(c=='y')
+            system("clear");
         printf("\n\n-------------------------------------------------------------------");
         printf("\n\t\t\t    MENU ");
         printf("\n-------------------------------------------------------------------\n");
@@ -45,5 +48,12 @@ int main()
         default: printf("Enter a valid choice.\n");
                 break;
         }
+        printf("\nContinue?(y/n): ");
+        scanf("\n");
+        c=fgetc(stdin);
+        if(c!='y')
+            break;
     }
+    s(first);
+    exit(0);
 }

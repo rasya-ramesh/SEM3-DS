@@ -38,5 +38,3 @@ void prompt(struct node*first);//function to prompt user about the tasks which a
 void extension(struct node**first);//function to give user option to extend date if the submission date of task
 // has passed and it hasnt been completed
 int isunique(char *);//checks if entered name is unique
-
-void next(struct node *);
